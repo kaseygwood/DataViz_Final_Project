@@ -9,6 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(tidyverse)
+library(stringr)
 load("./data/fina.rda")
 ```
 
@@ -21,12 +22,15 @@ detailed_results <- fina_join()
 ## 99 competitions 
 ```{r}
 comps <- detailed_results %>% group_by(competition) %>% summarise(n = n())
-sepdetailed_results <- detailed_results %>% separate(col = competition, into = c("competitionname", "year"),
-                              sep = -4) 
-finaldetailed_results <- sepdetailed_results %>% separate(col = competitionname, into = c("n/a", "compname"),
-                                                          sep = +5)
-test1 <- finaldetailed_results %>% group_by(compname) %>% summarise(n = n())
+sepdetailed_results <- detailed_results %>% separate(col = competition, 
+                                                     into = c("competitionname", "year"),
+                                                     sep = -4) 
+sepdetailed_results
 
+word(competitionname, start = 205, end = 259, sep = fixed)
+
+test1 <- finaldetailed_results %>% group_by(compname) %>% summarise(n = n())
+sepdetailed_results %>% group_by(series) %>% summarise (n = n())
 ```
 
 ```{r}
