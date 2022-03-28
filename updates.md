@@ -9,3 +9,7 @@ I spent a lot of time trying to find a data set that will work. Once I found thi
 ## March 23 End of Class
 
 I began putting information into my R app. I worked on attempting to get the tabs up and running and am working through connecting clicking on tabs to filtering particular data, however I am not sure if this is possible so I am still working through that.
+
+## March 28 Beginning of Class
+
+In between the last two classes I worked on the best way to show my data visualizations and decided on a sort of template to follow. I created the majority of the inputs that will be used in this app. I also messed around with the templates and decided where it would be best to put the tabs and what exactly I wanted the tabs to represent. I also played around with the data to start being able to visualize the data in the app.

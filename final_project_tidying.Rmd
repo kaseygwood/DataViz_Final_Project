@@ -39,15 +39,57 @@ sepdetailed_results %>% group_by(series) %>% summarise (n = n())
 
 ## Filter by competition
 ```{r}
-sepdetailed_results %>% filter(competitionname == "FINA Swimming World Cup ")
-View(test1)
+test1 <- detailed_results %>% filter(series == "Olympic Games")
+
 ```
 
-## Filter by year
+## Filter by event (buttons?)
+```{r}
+test2 <- test1 %>% filter(style == "Medley")
+
+```
+
+## Filter by length of the event (buttons?)
+```{r}
+test3 <- test2 %>% filter(distance == "200")
+```
+
+## Filter by whether the even is a relay
+```{r}
+test4 <- test3 %>% filter(relay == FALSE)
+```
+
+## Filter by the year
+```{r}
+test5 <- test4 %>% filter(year == 2008)
+```
+
+```{r}
+test5
+```
+
+## Filter by gender
+```{r}
+test6 <- test5 %>% filter(gender == "Men")
+
+test6 %>% group_by(phase_label) %>% summarise(n = n())
+test7 <- test6 %>% filter(phase_label == "Final")
+
+```
+
+## Make a table of the three winners, their country, and their time
+```{r}
+test7 <- test6 %>% filter(phase_label == "Final")
+test8 <- test7 %>% filter(rank == 1 | rank == 2 | rank == 3) %>% select(rank, ioc_code, family_name, first_name, time)
+test8
+```
+
+## Olympic Games worked
+## 
+
 ```{r}
 
 ```
-
 
 
 
