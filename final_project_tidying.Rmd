@@ -46,7 +46,6 @@ test1 <- detailed_results %>% filter(series == "Olympic Games")
 ## Filter by event (buttons?)
 ```{r}
 test2 <- test1 %>% filter(style == "Medley")
-
 ```
 
 ## Filter by length of the event (buttons?)
@@ -85,11 +84,34 @@ test8
 ```
 
 ## Olympic Games worked
-## 
 
+
+## graph the change in average time
 ```{r}
-
+test <- detailed_results %>% filter(na.rm = FALSE) filter(series == "Olympic Games") %>%
+  filter(gender == "Men") %>%
+  filter(relay == FALSE) %>%
+  filter(distance == 200) %>%
+  filter(style == "Butterfly") %>%
+  group_by(year) %>%
+  summarise(averagetime = mean(time),
+            se = sd(time)/sqrt(100),
+            l_se = averagetime - se,
+            u_se = averagetime + se)
+ggplot(data = test, aes(x = year, y = averagetime)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = l_se, ymax = u_se))
 ```
 
-
+athletes_df <- athletesdata %>% 
+  group_by(Sport) %>% 
+  summarise(meansalary = mean(salary),
+            se = (sd(salary))/sqrt(100),
+            l_se = meansalary - se,
+            u_se = meansalary + se)
+            
+ggplot(data = athletes_df, aes(x = Sport, y = meansalary)) +
+  geom_point() +
+  coord_flip() +
+  geom_errorbar(aes(ymin = l_se, ymax = u_se))
 
