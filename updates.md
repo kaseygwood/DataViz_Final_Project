@@ -21,3 +21,7 @@ During this class I fixed a few of the inputs so that they make more sense when 
 ## March 30 Beginning of Class
 
 In between the last two classes I focused mostly on the format I want my app to be in. I was having a lot of issues with the different series inputs because I wanted to be able to change the year depending on the series (and I wanted the series to all have separate tabs). So, I figured out how to do this by making a separate data set for each series. I also worked on creating a new visualization in the app. I chose not to add every single series yet (because it is all copy and paste once I do anyways), so that I can do it when the visualization is actually ready how I want it to be.
+
+## March 30 End of Class
+
+During class today I focused on figuring out how to get a plotly graph into the shiny app and reviewed how to make a shiny app in general. I was able to change the plot already in my app into a plotly graph so the user can read the graph more clearly. I also began to work on creating a map for a tab in my app, however I haven't figured out how to combine the data sets for it because the labeling is off so I am working on that as well. 

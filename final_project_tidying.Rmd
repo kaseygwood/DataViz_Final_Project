@@ -101,10 +101,13 @@ test <- detailed_results %>% filter(series == "Olympic Games") %>%
 
 ## graph the change in average time
 ```{r}
-ggplot(data = test, aes(x = year, y = averagetime)) +
+library(plotly)
+x <- ggplot(data = test, aes(x = year, y = averagetime)) +
   geom_point() +
   geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
   labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
+
+ggplotly(x)
 ```
 
 ## years in each series
@@ -114,10 +117,25 @@ View(w)
 detailed_results %>% group_by(series) %>% summarise(n = n())
 ```
 
+## map wins across each country for each year
+```{r}
+library(maps)
+library(tidyverse)
+detailed_results
+world_df <- ggplot2::map_data("world")
+ggplot(data = world_df, aes(x = long, y = lat, group = group)) +
+  geom_polygon(fill = "white", colour = "black") +
+  coord_map(projection = "gilber", xlim = c(-180, 180)) +
+  theme_void()
+# scale_fill_distiller(direction = 1)
+
+```
+
 ### Side Notes
 ## Wanna be able to see the average time when the mouse goes over the point in time_plot
 ## Possibly be able to change the options for inputs depending on the year selected and other? inputs
 ## Look into the World Cup rankings because there are two groups of three top winners for each (data issue?)
+## Make a map that shows the wins across each country for each year
 
 
 
