@@ -85,33 +85,39 @@ test8
 
 ## Olympic Games worked
 
-
-## graph the change in average time
 ```{r}
-test <- detailed_results %>% filter(na.rm = FALSE) filter(series == "Olympic Games") %>%
+test <- detailed_results %>% filter(series == "Olympic Games") %>%
   filter(gender == "Men") %>%
   filter(relay == FALSE) %>%
   filter(distance == 200) %>%
-  filter(style == "Butterfly") %>%
+  filter(style == "Breaststroke") %>%
   group_by(year) %>%
-  summarise(averagetime = mean(time),
-            se = sd(time)/sqrt(100),
-            l_se = averagetime - se,
-            u_se = averagetime + se)
-ggplot(data = test, aes(x = year, y = averagetime)) +
-  geom_point() +
-  geom_errorbar(aes(ymin = l_se, ymax = u_se))
+  summarise(averagetime = mean(time, na.rm = TRUE),
+                se = sd(time, na.rm = TRUE)/sqrt(100),
+                l_se = averagetime - se,
+                u_se = averagetime + se)
 ```
 
-athletes_df <- athletesdata %>% 
-  group_by(Sport) %>% 
-  summarise(meansalary = mean(salary),
-            se = (sd(salary))/sqrt(100),
-            l_se = meansalary - se,
-            u_se = meansalary + se)
-            
-ggplot(data = athletes_df, aes(x = Sport, y = meansalary)) +
+
+## graph the change in average time
+```{r}
+ggplot(data = test, aes(x = year, y = averagetime)) +
   geom_point() +
-  coord_flip() +
-  geom_errorbar(aes(ymin = l_se, ymax = u_se))
+  geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
+  labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
+```
+
+## years in each series
+```{r}
+w <- detailed_results %>% filter(series == "Championships (25m)") %>% group_by(year) %>% summarise(n = n())
+View(w)
+detailed_results %>% group_by(series) %>% summarise(n = n())
+```
+
+### Side Notes
+## Wanna be able to see the average time when the mouse goes over the point in time_plot
+## Possibly be able to change the options for inputs depending on the year selected and other? inputs
+## Look into the World Cup rankings because there are two groups of three top winners for each (data issue?)
+
+
 

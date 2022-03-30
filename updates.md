@@ -17,3 +17,7 @@ In between the last two classes I worked on the best way to show my data visuali
 ## March 28 End of Class
 
 During this class I fixed a few of the inputs so that they make more sense when choosing the variables. I also began looking at creating visualizations to put into the tabs. I made a base visualization that I am just trying to connect to the data in the shiny app. I have been working through how to fix my app so that I could possibly only have certain year input options when a particular series is selected. I am not sure if this is possible however.
+
+## March 30 Beginning of Class
+
+In between the last two classes I focused mostly on the format I want my app to be in. I was having a lot of issues with the different series inputs because I wanted to be able to change the year depending on the series (and I wanted the series to all have separate tabs). So, I figured out how to do this by making a separate data set for each series. I also worked on creating a new visualization in the app. I chose not to add every single series yet (because it is all copy and paste once I do anyways), so that I can do it when the visualization is actually ready how I want it to be.
