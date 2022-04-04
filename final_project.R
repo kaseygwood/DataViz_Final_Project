@@ -2,6 +2,8 @@ library(tidyverse)
 library(shiny)
 library(plotly)
 
+detailed_results <- fina_join()
+
 ui <- fluidPage(tabsetPanel(
   tabPanel("World Cup", fluid = TRUE,
            sidebarLayout(
@@ -81,6 +83,84 @@ ui <- fluidPage(tabsetPanel(
                tabPanel("Tab 2", plotlyOutput("timeplot_champion1"))
              ))
            )
+  ),
+  tabPanel("Championships (50m)", fluid = TRUE,
+           sidebarLayout(
+             sidebarPanel(
+               (radioButtons("Style_cl",
+                             label = "Choose the Stroke",
+                             choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+               (radioButtons("Distance_cl",
+                             label = "Select the Distance",
+                             choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                             selected = "100")),
+               (radioButtons("Relay_cl",
+                             label = "Relay?",
+                             choices = c("TRUE", "FALSE"), 
+                             selected = "FALSE")),
+               (selectizeInput("Year_cl", ## fix the input choices here
+                               label = "Select the Year",
+                               choices = c(1973, 1975, 1978, 1982, 1986, 1991, 1994, 1998, seq(2001, 2019, by = 2)))),
+               (radioButtons("Gender_cl",
+                             label = "Gender",
+                             choices = c("Men", "Women")))),
+             mainPanel(tabsetPanel(
+               tabPanel("Rankings", tableOutput("place_table_champion2")),
+               tabPanel("Tab 2", plotlyOutput("timeplot_champion2"))
+             ))
+           )
+  ),
+  tabPanel("Junior Championships", fluid = TRUE,
+           sidebarLayout(
+             sidebarPanel(
+               (radioButtons("Style_jc",
+                             label = "Choose the Stroke",
+                             choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+               (radioButtons("Distance_jc",
+                             label = "Select the Distance",
+                             choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                             selected = "100")),
+               (radioButtons("Relay_jc",
+                             label = "Relay?",
+                             choices = c("TRUE", "FALSE"), 
+                             selected = "FALSE")),
+               (selectizeInput("Year_jc", ## fix the input choices here
+                               label = "Select the Year",
+                               choices = c(2006, 2008, seq(2011, 2019, by = 2)))),
+               (radioButtons("Gender_jc",
+                             label = "Gender",
+                             choices = c("Men", "Women")))),
+             mainPanel(tabsetPanel(
+               tabPanel("Rankings", tableOutput("place_table_junior")),
+               tabPanel("Tab 2", plotlyOutput("timeplot_junior"))
+             ))
+           )
+  ),
+  tabPanel("Marathon Series", fluid = TRUE,
+           sidebarLayout(
+             sidebarPanel(
+               (radioButtons("Style_ms",
+                             label = "Choose the Stroke",
+                             choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+               (radioButtons("Distance_ms",
+                             label = "Select the Distance",
+                             choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                             selected = "100")),
+               (radioButtons("Relay_ms",
+                             label = "Relay?",
+                             choices = c("TRUE", "FALSE"), 
+                             selected = "FALSE")),
+               (selectizeInput("Year_ms", ## fix the input choices here
+                               label = "Select the Year",
+                               choices = c(2006, 2008, seq(2011, 2019, by = 2)))),
+               (radioButtons("Gender_ms",
+                             label = "Gender",
+                             choices = c("Men", "Women")))),
+             mainPanel(tabsetPanel(
+               tabPanel("Rankings", tableOutput("place_table_marathonseries")),
+               tabPanel("Tab 2", plotlyOutput("timeplot_marathonseries"))
+             ))
+           )
   )
   ))
 server <- function(input, output, session) {
@@ -108,6 +188,30 @@ server <- function(input, output, session) {
       filter(year == input$Year_c) %>%
       filter(gender == input$Gender_c)
   })
+  filtered_champion2 <- reactive({
+    detailed_results %>% filter(series == "Championships (50m)") %>%
+      filter(style == input$Style_cl) %>%
+      filter(distance == input$Distance_cl) %>%
+      filter(relay == input$Relay_cl) %>%
+      filter(year == input$Year_cl) %>%
+      filter(gender == input$Gender_cl)
+  })
+  filtered_junior <- reactive({
+    detailed_results %>% filter(series == "Junior Championships") %>%
+      filter(style == input$Style_jc) %>%
+      filter(distance == input$Distance_jc) %>%
+      filter(relay == input$Relay_jc) %>%
+      filter(year == input$Year_jc) %>%
+      filter(gender == input$Gender_jc)
+  })
+  filtered_marathonseries <- reactive({
+    detailed_results %>% filter(series == "Marathon Series") %>%
+      filter(style == input$Style_ms) %>%
+      filter(distance == input$Distance_ms) %>%
+      filter(relay == input$Relay_ms) %>%
+      filter(year == input$Year_ms) %>%
+      filter(gender == input$Gender_ms)
+  })
   output$place_table_worldcup <- renderTable({
     filtered_worldcup() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
@@ -120,6 +224,21 @@ server <- function(input, output, session) {
   })
   output$place_table_champion1 <- renderTable({
     filtered_champion1() %>% filter(phase_label == "Final") %>% 
+      filter(rank == 1 | rank == 2 | rank == 3) %>%
+      select(rank, ioc_code, family_name, first_name, time)
+  })
+  output$place_table_champion2 <- renderTable({
+    filtered_champion2() %>% filter(phase_label == "Final") %>% 
+      filter(rank == 1 | rank == 2 | rank == 3) %>%
+      select(rank, ioc_code, family_name, first_name, time)
+  })
+  output$place_table_junior <- renderTable({
+    filtered_junior() %>% filter(phase_label == "Final") %>% 
+      filter(rank == 1 | rank == 2 | rank == 3) %>%
+      select(rank, ioc_code, family_name, first_name, time)
+  })
+  output$place_table_marathonseries <- renderTable({
+    filtered_marathonseries() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
       select(rank, ioc_code, family_name, first_name, time)
   })
@@ -185,6 +304,69 @@ server <- function(input, output, session) {
   })
   output$timeplot_champion1 <- renderPlotly({
     ggplotly(time_plot_champion1_plotly())
+  })
+  time_plot_champion2 <- reactive({
+    detailed_results %>% filter(series == "Championships (50m)") %>%
+      filter(gender == input$Gender_cl) %>%
+      filter(relay == input$Relay_cl) %>%
+      filter(distance == input$Distance_cl) %>%
+      filter(style == input$Style_cl) %>%
+      group_by(year) %>%
+      summarise(averagetime = mean(time, na.rm = TRUE),
+                se = sd(time, na.rm = TRUE)/sqrt(100),
+                l_se = averagetime - se,
+                u_se = averagetime + se)
+  })
+  time_plot_champion2_plotly <- reactive({
+    ggplot(data = time_plot_champion2(), aes(x = year, y = averagetime)) +
+      geom_point() +
+      geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
+      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
+  })
+  output$timeplot_champion2 <- renderPlotly({
+    ggplotly(time_plot_champion2_plotly())
+  })
+  time_plot_junior <- reactive({
+    detailed_results %>% filter(series == "Junior Championships") %>%
+      filter(gender == input$Gender_jc) %>%
+      filter(relay == input$Relay_jc) %>%
+      filter(distance == input$Distance_jc) %>%
+      filter(style == input$Style_jc) %>%
+      group_by(year) %>%
+      summarise(averagetime = mean(time, na.rm = TRUE),
+                se = sd(time, na.rm = TRUE)/sqrt(100),
+                l_se = averagetime - se,
+                u_se = averagetime + se)
+  })
+  time_plot_junior_plotly <- reactive({
+    ggplot(data = time_plot_junior(), aes(x = year, y = averagetime)) +
+      geom_point() +
+      geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
+      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
+  })
+  output$timeplot_junior <- renderPlotly({
+    ggplotly(time_plot_junior_plotly())
+  })
+  time_plot_marathonseries <- reactive({
+    detailed_results %>% filter(series == "Marathon Series") %>%
+      filter(gender == input$Gender_ms) %>%
+      filter(relay == input$Relay_ms) %>%
+      filter(distance == input$Distance_ms) %>%
+      filter(style == input$Style_ms) %>%
+      group_by(year) %>%
+      summarise(averagetime = mean(time, na.rm = TRUE),
+                se = sd(time, na.rm = TRUE)/sqrt(100),
+                l_se = averagetime - se,
+                u_se = averagetime + se)
+  })
+  time_plot_marathonseries_plotly <- reactive({
+    ggplot(data = time_plot_marathonseries(), aes(x = year, y = averagetime)) +
+      geom_point() +
+      geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
+      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
+  })
+  output$timeplot_marathonseries <- renderPlotly({
+    ggplotly(time_plot_marathonseries_plotly())
   })
 }
 

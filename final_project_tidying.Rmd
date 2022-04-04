@@ -112,7 +112,7 @@ ggplotly(x)
 
 ## years in each series
 ```{r}
-w <- detailed_results %>% filter(series == "Championships (25m)") %>% group_by(year) %>% summarise(n = n())
+w <- detailed_results %>% filter(series == "Youth Olympic Games") %>% group_by(year) %>% summarise(n = n())
 View(w)
 detailed_results %>% group_by(series) %>% summarise(n = n())
 ```
@@ -121,13 +121,19 @@ detailed_results %>% group_by(series) %>% summarise(n = n())
 ```{r}
 library(maps)
 library(tidyverse)
+View(detailed_results)
 detailed_results
+library(countrycode)
+countrycode(detailed_results$ioc_code, "ioc", "country.name")
+## ask how to fix the NA variables
 world_df <- ggplot2::map_data("world")
 ggplot(data = world_df, aes(x = long, y = lat, group = group)) +
   geom_polygon(fill = "white", colour = "black") +
   coord_map(projection = "gilber", xlim = c(-180, 180)) +
   theme_void()
-# scale_fill_distiller(direction = 1)
+## scale_fill_distiller(direction = 1)
+results_full <- left_join(codelist_panel, detailed_results, by = c("ioc" = "ioc_code"))
+codelist_panel
 
 ```
 
@@ -136,6 +142,11 @@ ggplot(data = world_df, aes(x = long, y = lat, group = group)) +
 ## Possibly be able to change the options for inputs depending on the year selected and other? inputs
 ## Look into the World Cup rankings because there are two groups of three top winners for each (data issue?)
 ## Make a map that shows the wins across each country for each year
+## Want to add a visualization that explores times each year (possibly be able to add a time and see what rank that would get you)
+
+## won't let me combine data sets because too big ?
+
+
 
 
 

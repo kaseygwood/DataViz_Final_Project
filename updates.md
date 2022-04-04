@@ -25,3 +25,8 @@ In between the last two classes I focused mostly on the format I want my app to 
 ## March 30 End of Class
 
 During class today I focused on figuring out how to get a plotly graph into the shiny app and reviewed how to make a shiny app in general. I was able to change the plot already in my app into a plotly graph so the user can read the graph more clearly. I also began to work on creating a map for a tab in my app, however I haven't figured out how to combine the data sets for it because the labeling is off so I am working on that as well. 
+
+## April 4 Beginning of Class
+
+In between the last two classes I began adding the last of the tabs, however after adding some I decided to keep two of the types of series out because they only had data from one year. I then continued to work on creating a map for my app. I figured out how to combine the data sets, but they still won't combine because it says they are too large to combine, so I am still working through this. I may opt out of adding a map or possibly make smaller data sets, so it will be easier to combine. 
+
