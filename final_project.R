@@ -27,7 +27,7 @@ ui <- fluidPage(tabsetPanel(
                              choices = c("Men", "Women")))),
              mainPanel(tabsetPanel(
                tabPanel("Rankings", tableOutput("place_table_worldcup")),
-               tabPanel("Tab 2", plotlyOutput("timeplot_worldcup"))
+               tabPanel("Change Over Time", plotlyOutput("timeplot_worldcup"))
              ))
              )
            ),
@@ -53,7 +53,7 @@ ui <- fluidPage(tabsetPanel(
                              choices = c("Men", "Women")))),
              mainPanel(tabsetPanel(
                tabPanel("Rankings", tableOutput("place_table_olympics")),
-               tabPanel("Tab 2", plotlyOutput("timeplot_olympics"))
+               tabPanel("Change Over Time", plotlyOutput("timeplot_olympics"))
              )
            )
            )
@@ -80,7 +80,7 @@ ui <- fluidPage(tabsetPanel(
                              choices = c("Men", "Women")))),
              mainPanel(tabsetPanel(
                tabPanel("Rankings", tableOutput("place_table_champion1")),
-               tabPanel("Tab 2", plotlyOutput("timeplot_champion1"))
+               tabPanel("Change Over Time", plotlyOutput("timeplot_champion1"))
              ))
            )
   ),
@@ -106,7 +106,7 @@ ui <- fluidPage(tabsetPanel(
                              choices = c("Men", "Women")))),
              mainPanel(tabsetPanel(
                tabPanel("Rankings", tableOutput("place_table_champion2")),
-               tabPanel("Tab 2", plotlyOutput("timeplot_champion2"))
+               tabPanel("Change Over Time", plotlyOutput("timeplot_champion2"))
              ))
            )
   ),
@@ -132,33 +132,33 @@ ui <- fluidPage(tabsetPanel(
                              choices = c("Men", "Women")))),
              mainPanel(tabsetPanel(
                tabPanel("Rankings", tableOutput("place_table_junior")),
-               tabPanel("Tab 2", plotlyOutput("timeplot_junior"))
+               tabPanel("Change Over Time", plotlyOutput("timeplot_junior"))
              ))
            )
   ),
-  tabPanel("Marathon Series", fluid = TRUE,
+  tabPanel("Youth Olympic Games", fluid = TRUE,
            sidebarLayout(
              sidebarPanel(
-               (radioButtons("Style_ms",
+               (radioButtons("Style_yo",
                              label = "Choose the Stroke",
                              choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
-               (radioButtons("Distance_ms",
+               (radioButtons("Distance_yo",
                              label = "Select the Distance",
                              choices = c("50", "100", "200", "400", "500", "1000", "1500"),
                              selected = "100")),
-               (radioButtons("Relay_ms",
+               (radioButtons("Relay_yo",
                              label = "Relay?",
                              choices = c("TRUE", "FALSE"), 
                              selected = "FALSE")),
-               (selectizeInput("Year_ms", ## fix the input choices here
+               (selectizeInput("Year_yo", ## fix the input choices here
                                label = "Select the Year",
-                               choices = c(2006, 2008, seq(2011, 2019, by = 2)))),
-               (radioButtons("Gender_ms",
+                               choices = c(2010, 2014, 2018))),
+               (radioButtons("Gender_yo",
                              label = "Gender",
                              choices = c("Men", "Women")))),
              mainPanel(tabsetPanel(
-               tabPanel("Rankings", tableOutput("place_table_marathonseries")),
-               tabPanel("Tab 2", plotlyOutput("timeplot_marathonseries"))
+               tabPanel("Rankings", tableOutput("place_table_youtholympics")),
+               tabPanel("Change Over Time", plotlyOutput("timeplot_youtholympics"))
              ))
            )
   )
@@ -204,43 +204,43 @@ server <- function(input, output, session) {
       filter(year == input$Year_jc) %>%
       filter(gender == input$Gender_jc)
   })
-  filtered_marathonseries <- reactive({
-    detailed_results %>% filter(series == "Marathon Series") %>%
-      filter(style == input$Style_ms) %>%
-      filter(distance == input$Distance_ms) %>%
-      filter(relay == input$Relay_ms) %>%
-      filter(year == input$Year_ms) %>%
-      filter(gender == input$Gender_ms)
+  filtered_youtholympics <- reactive({
+    detailed_results %>% filter(series == "Youth Olympic Games") %>%
+      filter(style == input$Style_yo) %>%
+      filter(distance == input$Distance_yo) %>%
+      filter(relay == input$Relay_yo) %>%
+      filter(year == input$Year_yo) %>%
+      filter(gender == input$Gender_yo)
   })
   output$place_table_worldcup <- renderTable({
     filtered_worldcup() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      select(rank, ioc_code, family_name, first_name, time)
+      select(rank, ioc_code, family_name, first_name, str_time)
   })
   output$place_table_olympics <- renderTable({
     filtered_olympics() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      select(rank, ioc_code, family_name, first_name, time)
+      select(rank, ioc_code, family_name, first_name, str_time)
   })
   output$place_table_champion1 <- renderTable({
     filtered_champion1() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      select(rank, ioc_code, family_name, first_name, time)
+      select(rank, ioc_code, family_name, first_name, str_time)
   })
   output$place_table_champion2 <- renderTable({
     filtered_champion2() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      select(rank, ioc_code, family_name, first_name, time)
+      select(rank, ioc_code, family_name, first_name, str_time)
   })
   output$place_table_junior <- renderTable({
     filtered_junior() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      select(rank, ioc_code, family_name, first_name, time)
+      select(rank, ioc_code, family_name, first_name, str_time)
   })
-  output$place_table_marathonseries <- renderTable({
-    filtered_marathonseries() %>% filter(phase_label == "Final") %>% 
+  output$place_table_youtholympics <- renderTable({
+    filtered_youtholympics() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      select(rank, ioc_code, family_name, first_name, time)
+      select(rank, ioc_code, family_name, first_name, str_time)
   })
   time_plot_worldcup <- reactive({
     detailed_results %>% filter(series == "World Cup") %>%
@@ -347,26 +347,26 @@ server <- function(input, output, session) {
   output$timeplot_junior <- renderPlotly({
     ggplotly(time_plot_junior_plotly())
   })
-  time_plot_marathonseries <- reactive({
-    detailed_results %>% filter(series == "Marathon Series") %>%
-      filter(gender == input$Gender_ms) %>%
-      filter(relay == input$Relay_ms) %>%
-      filter(distance == input$Distance_ms) %>%
-      filter(style == input$Style_ms) %>%
+  time_plot_youtholympics <- reactive({
+    detailed_results %>% filter(series == "Youth Olympic Games") %>%
+      filter(gender == input$Gender_yo) %>%
+      filter(relay == input$Relay_yo) %>%
+      filter(distance == input$Distance_yo) %>%
+      filter(style == input$Style_yo) %>%
       group_by(year) %>%
       summarise(averagetime = mean(time, na.rm = TRUE),
                 se = sd(time, na.rm = TRUE)/sqrt(100),
                 l_se = averagetime - se,
                 u_se = averagetime + se)
   })
-  time_plot_marathonseries_plotly <- reactive({
-    ggplot(data = time_plot_marathonseries(), aes(x = year, y = averagetime)) +
+  time_plot_youtholympics_plotly <- reactive({
+    ggplot(data = time_plot_youtholympics(), aes(x = year, y = averagetime)) +
       geom_point() +
       geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
       labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
   })
-  output$timeplot_marathonseries <- renderPlotly({
-    ggplotly(time_plot_marathonseries_plotly())
+  output$timeplot_youtholympics <- renderPlotly({
+    ggplotly(time_plot_youtholympics_plotly())
   })
 }
 

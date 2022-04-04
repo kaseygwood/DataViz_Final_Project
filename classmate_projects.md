@@ -13,3 +13,7 @@ Alex: Created an app that compares NFL prospect quarterbacks to starting NFL qua
 ## March 30
 
 John Burger: Is creating a blogdown post that looks at different factors that may play into cardiovascular disease. He isn't stuck right now but he is still trying to fight through some issues with creating his tables. 
+
+## April 4
+
+Lily Kasperek: Lily has been working on a blogdown with different data sets. She has been working mainly on a political data set to start and is just working on creating new ideas for data visualizations for her project. She has made some very nice visualizations that she made look very nice by changing the font and other parts.

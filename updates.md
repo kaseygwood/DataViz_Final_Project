@@ -30,3 +30,7 @@ During class today I focused on figuring out how to get a plotly graph into the 
 
 In between the last two classes I began adding the last of the tabs, however after adding some I decided to keep two of the types of series out because they only had data from one year. I then continued to work on creating a map for my app. I figured out how to combine the data sets, but they still won't combine because it says they are too large to combine, so I am still working through this. I may opt out of adding a map or possibly make smaller data sets, so it will be easier to combine. 
 
+## April 4 End of Class
+
+During this class I was mainly working through issues with the data visualizations I would like to make. I am working through changing NA values so that I can make a graphic that shows the time_behind. I am also working through combining the map data sets still (but it still doesn't work even with a smaller data set). I edited the tabs so they are now all set and just need to add more visualizations to each tab. This means the base of my project is done and now it's just adding good visualizations to the app.
+

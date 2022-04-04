@@ -113,7 +113,6 @@ ggplotly(x)
 ## years in each series
 ```{r}
 w <- detailed_results %>% filter(series == "Youth Olympic Games") %>% group_by(year) %>% summarise(n = n())
-View(w)
 detailed_results %>% group_by(series) %>% summarise(n = n())
 ```
 
@@ -121,7 +120,6 @@ detailed_results %>% group_by(series) %>% summarise(n = n())
 ```{r}
 library(maps)
 library(tidyverse)
-View(detailed_results)
 detailed_results
 library(countrycode)
 countrycode(detailed_results$ioc_code, "ioc", "country.name")
@@ -134,11 +132,11 @@ ggplot(data = world_df, aes(x = long, y = lat, group = group)) +
 ## scale_fill_distiller(direction = 1)
 results_full <- left_join(codelist_panel, detailed_results, by = c("ioc" = "ioc_code"))
 codelist_panel
-
+test <- detailed_results %>% filter(series == "Olympic Games")
+results_half <- left_join(codelist_panel, detailed_results, by = c("ioc" = "ioc_code"))
 ```
 
 ### Side Notes
-## Wanna be able to see the average time when the mouse goes over the point in time_plot
 ## Possibly be able to change the options for inputs depending on the year selected and other? inputs
 ## Look into the World Cup rankings because there are two groups of three top winners for each (data issue?)
 ## Make a map that shows the wins across each country for each year
@@ -146,6 +144,50 @@ codelist_panel
 
 ## won't let me combine data sets because too big ?
 
+## Look at reaction time vs results
+
+```{r}
+test <- detailed_results %>% filter(series == "Olympic Games") %>%
+  filter(gender == "Men") %>%
+  filter(relay == FALSE) %>%
+  filter(distance == 100) %>%
+  filter(style == "Butterfly") %>%
+  filter(year == 2008) %>%
+  filter(phase_label == "Final")
+
+ggplot(data = test, aes(x = time, y = rt)) +
+  geom_point()
+
+test2 <- detailed_results %>% filter(series == "Olympic Games") %>%
+  filter(gender == "Men") %>%
+  filter(relay == TRUE) %>%
+  filter(distance == 400) %>%
+  filter(style == "Freestyle") %>%
+  filter(year == 2008)
+View(test2)
+
+mod1 <- lm(time~gender + relay + distance + style + year + series + rt, data = detailed_results)
+
+```
+
+## Make something that when the time is put in it will show what place you would've gotten that year
+
+```{r}
+rbind(filtered_results, c())
+```
+
+```{r}
+test2 <- detailed_results %>% filter(series == "Olympic Games") %>%
+  filter(gender == "Men") %>%
+  filter(relay == FALSE) %>%
+  filter(distance == 400) %>%
+  filter(style == "Freestyle") %>%
+  filter(year == 2008) %>%
+  filter(phase_label == "Final")
+test2[is.na(test2)] <- 0
+ggplot(data = test2, aes(x = timebehind, y = first_name)) +
+  geom_col()
+```
 
 
 
