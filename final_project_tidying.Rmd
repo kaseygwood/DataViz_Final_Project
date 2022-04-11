@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(stringr)
-load("./data/fina.rda")
+
 ```
 
 ```{r}
@@ -189,6 +189,52 @@ ggplot(data = test2, aes(x = timebehind, y = first_name)) +
   geom_col()
 ```
 
+## Make something that when the time is put in it will show what place you would've gotten that year
 
+
+### Lists top 8 finishers and the time behind from the first finisher they were
+## add something that represents the country to this graph.
+```{r}
+test2 <- detailed_results %>% filter(series == "Olympic Games") %>%
+  filter(gender == "Men") %>%
+  filter(relay == FALSE) %>%
+  filter(distance == 400) %>%
+  filter(style == "Freestyle") %>%
+  filter(year == 2008) %>%
+  filter(phase_label == "Final") %>%
+  arrange(desc(phase_label)) %>%
+  slice(1:8) %>%
+  mutate(timebehind = case_when(is.na(time_behind) ~ "0", 
+          !is.na(time_behind) ~ time_behind)) %>%
+  mutate(name_ordered = fct_reorder(.f = family_name, .x = timebehind))
+View(test2)
+# get na value out
+
+ggplot(data = test2, aes(x = name_ordered, y = timebehind)) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "Time Behind",
+       y = "Swimmer")
+```
+
+```{r}
+test4 <- detailed_results %>% filter(series == "Olympic Games") %>%
+  filter(phase_label == "Final") %>%
+  filter(rank == 1 | rank == 2 | rank == 3) %>%
+  filter(year == 2008) %>%
+  group_by(ioc_code, rank) %>%
+  summarise(medals = n()) %>%
+  pivot_wider(names_from = rank,
+              values_from = medals) %>%
+  mutate(totalmedals = `1` + `2` + `3`) %>%
+  mutate(gold = case_when(is.na(`1`) ~ "0",
+                          !is.na(`1`) ~ `1`))
+test4[is.na(test4)] = 0
+test4
+library(knitr)
+kable(test4, col.names = c("Country", "Gold Medals", "Silver Medals", "Bronze Medals", "Total Medals"))
+library(pander)
+pander(test4)
+```
 
 

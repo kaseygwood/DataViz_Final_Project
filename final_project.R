@@ -1,6 +1,7 @@
 library(tidyverse)
 library(shiny)
 library(plotly)
+library(knitr)
 
 detailed_results <- fina_join()
 
@@ -52,7 +53,8 @@ ui <- fluidPage(tabsetPanel(
                              label = "Gender",
                              choices = c("Men", "Women")))),
              mainPanel(tabsetPanel(
-               tabPanel("Rankings", tableOutput("place_table_olympics")),
+               tabPanel("Rankings", tableOutput("place_table_olympics"),
+                        tableOutput("country_medals_o")),
                tabPanel("Change Over Time", plotlyOutput("timeplot_olympics"))
              )
            )
@@ -368,6 +370,26 @@ server <- function(input, output, session) {
   output$timeplot_youtholympics <- renderPlotly({
     ggplotly(time_plot_youtholympics_plotly())
   })
+  country_medals_df_o <- reactive({
+    detailed_results %>% filter(series == "Olympic Games") %>%
+      filter(phase_label == "Final") %>%
+      filter(rank == 1 | rank == 2 | rank == 3) %>%
+      filter(year == input$Year_o) %>%
+      group_by(ioc_code, rank) %>%
+      summarise(medals = n()) %>%
+      pivot_wider(names_from = rank,
+                  values_from = medals) %>%
+      mutate(totalmedals = `1` + `2` + `3`) %>%
+      mutate(medals = )
+  })
+  country_medals_df_table <- reactive({
+    country_medals_df_o()[is.na(country_medals_df_o())] = 0
+  })
+  output$country_medals_o <- renderTable({
+    kable(country_medals_df_table(), col.names = c("Country", "Gold Medals", "Silver Medals", "Bronze Medals", "Total Medals"))
+  })
 }
+mutate(timebehind = case_when(is.na(time_behind) ~ "0", 
+                              !is.na(time_behind) ~ time_behind)) 
 
 shinyApp(ui, server)

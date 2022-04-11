@@ -34,3 +34,7 @@ In between the last two classes I began adding the last of the tabs, however aft
 
 During this class I was mainly working through issues with the data visualizations I would like to make. I am working through changing NA values so that I can make a graphic that shows the time_behind. I am also working through combining the map data sets still (but it still doesn't work even with a smaller data set). I edited the tabs so they are now all set and just need to add more visualizations to each tab. This means the base of my project is done and now it's just adding good visualizations to the app.
 
+## April 11 Beginning of Class
+
+In between the last two classes I worked on creating new visualizations for the data set. I decided to work on making a graph that shows the top 8 finishers for each event and shows the amount of time they were behind the first place finisher. I figured out how to get the na values changed to 0 for the first place finishers, however I am still debating other additions to the graph like how to show the country before I put it in the project. I also began working on a table that shows the amount of medals for each country by year depending on the series. I am also still working on this because it did not work well when I placed it into the project, so I am not sure why it worked with the data and not now. 
+
