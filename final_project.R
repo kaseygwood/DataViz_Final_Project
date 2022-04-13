@@ -27,7 +27,8 @@ ui <- fluidPage(tabsetPanel(
                              label = "Gender",
                              choices = c("Men", "Women")))),
              mainPanel(tabsetPanel(
-               tabPanel("Rankings", tableOutput("place_table_worldcup")),
+               tabPanel("Rankings", tableOutput("place_table_worldcup"),
+                        plotlyOutput("top8_plot_wc")),
                tabPanel("Change Over Time", plotlyOutput("timeplot_worldcup"))
              ))
              )
@@ -379,8 +380,7 @@ server <- function(input, output, session) {
       summarise(medals = n()) %>%
       pivot_wider(names_from = rank,
                   values_from = medals) %>%
-      mutate(totalmedals = `1` + `2` + `3`) %>%
-      mutate(medals = )
+      mutate(totalmedals = `1` + `2` + `3`)
   })
   country_medals_df_table <- reactive({
     country_medals_df_o()[is.na(country_medals_df_o())] = 0
@@ -388,8 +388,33 @@ server <- function(input, output, session) {
   output$country_medals_o <- renderTable({
     kable(country_medals_df_table(), col.names = c("Country", "Gold Medals", "Silver Medals", "Bronze Medals", "Total Medals"))
   })
+  top8_df_wc <- reactive({
+    detailed_results %>% filter(series == "World Cup") %>%
+      filter(gender == input$Gender) %>%
+      filter(relay == input$Relay) %>%
+      filter(distance == input$Distance) %>%
+      filter(style == input$Style) %>%
+      filter(year == input$Year) %>%
+      filter(phase_label == "Final") %>%
+      arrange(desc(phase_label)) %>%
+      slice(1:8) %>%
+      mutate(timebehind = case_when(is.na(time_behind) ~ "0", 
+                                    !is.na(time_behind) ~ time_behind)) %>%
+      mutate(name_ordered = fct_reorder(.f = family_name, .x = desc(timebehind)))
+  })
+  top8plotwc <- reactive({
+    ggplot(data = top8_df_wc(), aes(x = name_ordered, y = timebehind, fill = ioc_code)) +
+      geom_col() +
+      coord_flip() +
+      labs(x = "Time Behind",
+           y = "Swimmer",
+           title = "Top 8 Finishers Time Difference from First Place Finisher",
+           fill = "Country")
+  })
+  output$top8_plot_wc <- renderPlotly({
+    ggplotly(top8plotwc())
+  })
+  
 }
-mutate(timebehind = case_when(is.na(time_behind) ~ "0", 
-                              !is.na(time_behind) ~ time_behind)) 
 
 shinyApp(ui, server)

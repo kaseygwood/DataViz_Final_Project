@@ -38,3 +38,7 @@ During this class I was mainly working through issues with the data visualizatio
 
 In between the last two classes I worked on creating new visualizations for the data set. I decided to work on making a graph that shows the top 8 finishers for each event and shows the amount of time they were behind the first place finisher. I figured out how to get the na values changed to 0 for the first place finishers, however I am still debating other additions to the graph like how to show the country before I put it in the project. I also began working on a table that shows the amount of medals for each country by year depending on the series. I am also still working on this because it did not work well when I placed it into the project, so I am not sure why it worked with the data and not now. 
 
+## April 13 Beginning of Class
+
+In between the last two classes I was able to add one of my new visualizations into the project. I worked on making it more visually pleasing and am still working on that part, so I have only added it in the world cup section of the project. I put some more work into figuring out how to put my other visualization into shiny, but I am still struggling with this and have not quite figured it out. 
+

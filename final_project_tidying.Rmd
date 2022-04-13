@@ -210,12 +210,16 @@ test2 <- detailed_results %>% filter(series == "Olympic Games") %>%
 View(test2)
 # get na value out
 
+library(plotly)
+
 ggplot(data = test2, aes(x = name_ordered, y = timebehind)) +
   geom_col() +
   coord_flip() +
   labs(x = "Time Behind",
        y = "Swimmer")
 ```
+
+## medals by country
 
 ```{r}
 test4 <- detailed_results %>% filter(series == "Olympic Games") %>%
@@ -227,8 +231,9 @@ test4 <- detailed_results %>% filter(series == "Olympic Games") %>%
   pivot_wider(names_from = rank,
               values_from = medals) %>%
   mutate(totalmedals = `1` + `2` + `3`) %>%
-  mutate(gold = case_when(is.na(`1`) ~ "0",
-                          !is.na(`1`) ~ `1`))
+  rename(gold = `1`)
+test4 %>% mutate(Gold = case_when(is.na(gold) ~ "0", !is.na(gold) ~ gold))
+
 test4[is.na(test4)] = 0
 test4
 library(knitr)
@@ -236,5 +241,12 @@ kable(test4, col.names = c("Country", "Gold Medals", "Silver Medals", "Bronze Me
 library(pander)
 pander(test4)
 ```
+```{R}
+library(plotly)
+x <- ggplot(data = test, aes(x = year, y = averagetime)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
+  labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
 
-
+ggplotly(x)
+```
