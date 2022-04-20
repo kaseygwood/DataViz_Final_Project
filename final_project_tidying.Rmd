@@ -232,7 +232,8 @@ test4 <- detailed_results %>% filter(series == "Olympic Games") %>%
               values_from = medals) %>%
   mutate(totalmedals = `1` + `2` + `3`) %>%
   rename(gold = `1`)
-test4 %>% mutate(Gold = case_when(is.na(gold) ~ "0", !is.na(gold) ~ gold))
+  
+test4 %>% mutate(Gold = case_when(is.na(gold) ~ 0, !is.na(gold) ~ gold))
 
 test4[is.na(test4)] = 0
 test4
@@ -241,6 +242,7 @@ kable(test4, col.names = c("Country", "Gold Medals", "Silver Medals", "Bronze Me
 library(pander)
 pander(test4)
 ```
+
 ```{R}
 library(plotly)
 x <- ggplot(data = test, aes(x = year, y = averagetime)) +

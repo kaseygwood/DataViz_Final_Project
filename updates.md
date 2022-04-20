@@ -42,3 +42,7 @@ In between the last two classes I worked on creating new visualizations for the 
 
 In between the last two classes I was able to add one of my new visualizations into the project. I worked on making it more visually pleasing and am still working on that part, so I have only added it in the world cup section of the project. I put some more work into figuring out how to put my other visualization into shiny, but I am still struggling with this and have not quite figured it out. 
 
+## April 20 Beginning of Class
+
+In between the last two classes I have been working still on the two visualizations. I have been able to get them both into the Olympics portion of the app, but I am still have a lot of trouble with the medal visualization. I want to be able to label my tables but I only know how to do that with one of the table functions, which shiny isn't letting me use (or I'm not using it correctly in shiny). I was able to get this graph into the app, but it shows NA values where I want it to show 0 or that added values for the total. I decided to add a different input right above that chart so it is more specifically know that only the year is used. I am debating doing this as well for the other main parts of my app, but I have not quite figured out the best way to do it because the graphs all use different inputs and all have different set values. Before I move on I want to be able to figure out how to get the NA values out of this graph. I think I may end up putting each graph on a different tab and have different inputs from there. 
+

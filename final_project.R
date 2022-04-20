@@ -27,7 +27,8 @@ ui <- fluidPage(tabsetPanel(
                              label = "Gender",
                              choices = c("Men", "Women")))),
              mainPanel(tabsetPanel(
-               tabPanel("Rankings", tableOutput("place_table_worldcup"),
+               tabPanel("Rankings", 
+                        tableOutput("place_table_worldcup"),
                         plotlyOutput("top8_plot_wc")),
                tabPanel("Change Over Time", plotlyOutput("timeplot_worldcup"))
              ))
@@ -55,7 +56,11 @@ ui <- fluidPage(tabsetPanel(
                              choices = c("Men", "Women")))),
              mainPanel(tabsetPanel(
                tabPanel("Rankings", tableOutput("place_table_olympics"),
-                        tableOutput("country_medals_o")),
+                        (selectizeInput("Year_o_medal", ## fix the input choices here
+                                        label = "Select the Year",
+                                        choices = c(seq(1924, 2016, by = 4)))),
+                        tableOutput("country_medals_o"),
+                        plotlyOutput("top8_plot_o")),
                tabPanel("Change Over Time", plotlyOutput("timeplot_olympics"))
              )
            )
@@ -375,18 +380,15 @@ server <- function(input, output, session) {
     detailed_results %>% filter(series == "Olympic Games") %>%
       filter(phase_label == "Final") %>%
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      filter(year == input$Year_o) %>%
+      filter(year == input$Year_o_medal) %>%
       group_by(ioc_code, rank) %>%
       summarise(medals = n()) %>%
       pivot_wider(names_from = rank,
                   values_from = medals) %>%
       mutate(totalmedals = `1` + `2` + `3`)
   })
-  country_medals_df_table <- reactive({
-    country_medals_df_o()[is.na(country_medals_df_o())] = 0
-  })
   output$country_medals_o <- renderTable({
-    kable(country_medals_df_table(), col.names = c("Country", "Gold Medals", "Silver Medals", "Bronze Medals", "Total Medals"))
+    country_medals_df_o()
   })
   top8_df_wc <- reactive({
     detailed_results %>% filter(series == "World Cup") %>%
@@ -413,6 +415,33 @@ server <- function(input, output, session) {
   })
   output$top8_plot_wc <- renderPlotly({
     ggplotly(top8plotwc())
+  })
+  top8_df_o <- reactive({
+    detailed_results %>% filter(series == "Olympic Games") %>%
+      filter(gender == input$Gender_o) %>%
+      filter(relay == input$Relay_o) %>%
+      filter(distance == input$Distance_o) %>%
+      filter(style == input$Style_o) %>%
+      filter(year == input$Year_o) %>%
+      filter(phase_label == "Final") %>%
+      arrange(desc(phase_label)) %>%
+      slice(1:8) %>%
+      mutate(timebehind = case_when(is.na(time_behind) ~ "0", 
+                                    !is.na(time_behind) ~ time_behind)) %>%
+      mutate(name_ordered = fct_reorder(.f = family_name, .x = desc(timebehind)))
+  })
+  
+  top8ploto <- reactive({
+    ggplot(data = top8_df_o(), aes(x = name_ordered, y = timebehind, fill = ioc_code)) +
+      geom_col() +
+      coord_flip() +
+      labs(x = "Time Behind",
+           y = "Swimmer",
+           title = "Top 8 Finishers Time Difference from First Place Finisher",
+           fill = "Country")
+  })
+  output$top8_plot_o <- renderPlotly({
+    ggplotly(top8ploto())
   })
   
 }
