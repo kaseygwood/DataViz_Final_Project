@@ -17,3 +17,7 @@ John Burger: Is creating a blogdown post that looks at different factors that ma
 ## April 4
 
 Lily Kasperek: Lily has been working on a blogdown with different data sets. She has been working mainly on a political data set to start and is just working on creating new ideas for data visualizations for her project. She has made some very nice visualizations that she made look very nice by changing the font and other parts.
+
+## April 20
+
+Shane: He is working on a project that also looks at data from a sports team. He is looking at soccer data by player and split it up in tabs of graphics that show each different type of the sport. Like passing, scoring, etc.. He is just working through it because it just takes a lot of code and isn't really having any issues yet with it.

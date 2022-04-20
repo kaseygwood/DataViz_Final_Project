@@ -35,37 +35,55 @@ ui <- fluidPage(tabsetPanel(
              )
            ),
   tabPanel("Olympic Games", fluid = TRUE,
-           sidebarLayout(
-             sidebarPanel(
-               (radioButtons("Style_o",
-                             label = "Choose the Stroke",
-                             choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
-               (radioButtons("Distance_o",
-                             label = "Select the Distance",
-                             choices = c("50", "100", "200", "400", "500", "1000", "1500"),
-                             selected = "100")),
-               (radioButtons("Relay_o",
-                             label = "Relay?",
-                             choices = c("TRUE", "FALSE"),
-                             selected = "FALSE")),
-               (selectizeInput("Year_o", ## fix the input choices here
-                               label = "Select the Year",
-                               choices = c(seq(1924, 2016, by = 4)))),
-               (radioButtons("Gender_o",
-                             label = "Gender",
-                             choices = c("Men", "Women")))),
-             mainPanel(tabsetPanel(
-               tabPanel("Rankings", tableOutput("place_table_olympics"),
+           verticalLayout(
+             (tabsetPanel(
+               tabPanel("Rankings", fluid = TRUE,
+                        sidebarLayout(
+                          sidebarPanel(
+                            (radioButtons("Style_o",
+                                          label = "Choose the Stroke",
+                                          choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+                            (radioButtons("Distance_o",
+                                          label = "Select the Distance",
+                                          choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                                          selected = "100")),
+                            (radioButtons("Relay_o",
+                                          label = "Relay?",
+                                          choices = c("TRUE", "FALSE"),
+                                          selected = "FALSE")),
+                            (selectizeInput("Year_o", ## fix the input choices here
+                                            label = "Select the Year",
+                                            choices = c(seq(1924, 2016, by = 4)))),
+                            (radioButtons("Gender_o",
+                                          label = "Gender",
+                                          choices = c("Men", "Women")))),
+                          mainPanel(tableOutput("place_table_olympics"),
+                                    plotlyOutput("top8_plot_o")))),
+               tabPanel("Change in time over the years", fluid = TRUE,
+                        sidebarLayout(
+                          sidebarPanel(
+                            (radioButtons("Style_o",
+                                          label = "Choose the Stroke",
+                                          choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+                            (radioButtons("Distance_o",
+                                          label = "Select the Distance",
+                                          choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                                          selected = "100")),
+                            (radioButtons("Relay_o",
+                                          label = "Relay?",
+                                          choices = c("TRUE", "FALSE"),
+                                          selected = "FALSE")),
+                            (radioButtons("Gender_o",
+                                          label = "Gender",
+                                          choices = c("Men", "Women")))),
+                          mainPanel(plotlyOutput("timeplot_olympics")))),
+               tabPanel("Medals Won by Country Each Year", fluid = TRUE,
                         (selectizeInput("Year_o_medal", ## fix the input choices here
                                         label = "Select the Year",
                                         choices = c(seq(1924, 2016, by = 4)))),
-                        tableOutput("country_medals_o"),
-                        plotlyOutput("top8_plot_o")),
-               tabPanel("Change Over Time", plotlyOutput("timeplot_olympics"))
+                        tableOutput("country_medals_o")))
              )
-           )
-           )
-  ),
+           )),
   tabPanel("Championships (25m)", fluid = TRUE,
            sidebarLayout(
              sidebarPanel(
@@ -380,12 +398,20 @@ server <- function(input, output, session) {
     detailed_results %>% filter(series == "Olympic Games") %>%
       filter(phase_label == "Final") %>%
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      filter(year == input$Year_o_medal) %>%
+      filter(year == 2008) %>%
       group_by(ioc_code, rank) %>%
       summarise(medals = n()) %>%
       pivot_wider(names_from = rank,
                   values_from = medals) %>%
-      mutate(totalmedals = `1` + `2` + `3`)
+      mutate(gold = as.numeric(`1`),
+             silver = as.numeric(`2`),
+             bronze = as.numeric(`3`)) %>% 
+      mutate(Gold = case_when(is.na(gold) ~ 0, !is.na(gold) ~ gold),
+             Silver = case_when(is.na(silver) ~ 0, !is.na(silver) ~ silver),
+             Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
+      mutate(totalmedals = Gold + Silver + Bronze) %>%
+      select(ioc_code, Gold, Silver, Bronze, totalmedals) %>%
+      arrange(desc(totalmedals))
   })
   output$country_medals_o <- renderTable({
     country_medals_df_o()

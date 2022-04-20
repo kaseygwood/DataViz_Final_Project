@@ -230,11 +230,25 @@ test4 <- detailed_results %>% filter(series == "Olympic Games") %>%
   summarise(medals = n()) %>%
   pivot_wider(names_from = rank,
               values_from = medals) %>%
-  mutate(totalmedals = `1` + `2` + `3`) %>%
-  rename(gold = `1`)
+  mutate(gold = as.numeric(`1`),
+                 silver = as.numeric(`2`),
+                 bronze = as.numeric(`3`)) %>% 
+  mutate(Gold = case_when(is.na(gold) ~ 0, !is.na(gold) ~ gold),
+         Silver = case_when(is.na(silver) ~ 0, !is.na(silver) ~ silver),
+         Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
+  mutate(totalmedals = Gold + Silver + Bronze) %>%
+  select(ioc_code, Gold, Silver, Bronze, totalmedals)
   
-test4 %>% mutate(Gold = case_when(is.na(gold) ~ 0, !is.na(gold) ~ gold))
 
+test4 %>% mutate(gold = as.numeric(gold),
+                 silver = as.numeric(`2`),
+                 bronze = as.numeric(`3`)) %>% 
+  mutate(Gold = case_when(is.na(gold) ~ 0, !is.na(gold) ~ gold),
+         Silver = case_when(is.na(silver) ~ 0, !is.na(silver) ~ silver),
+         Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze))
+
+
+test4$gold
 test4[is.na(test4)] = 0
 test4
 library(knitr)
