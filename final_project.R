@@ -7,33 +7,55 @@ detailed_results <- fina_join()
 
 ui <- fluidPage(tabsetPanel(
   tabPanel("World Cup", fluid = TRUE,
-           sidebarLayout(
-             sidebarPanel(
-               (radioButtons("Style",
-                             label = "Choose the Stroke",
-                             choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
-               (radioButtons("Distance",
-                             label = "Select the Distance",
-                             choices = c("50", "100", "200", "400", "500", "1000", "1500"),
-                             selected = "100")),
-               (radioButtons("Relay",
-                             label = "Relay?",
-                             choices = c("TRUE", "FALSE"), 
-                             selected = "FALSE")),
-               (selectizeInput("Year", ## fix the input choices here
-                               label = "Select the Year",
-                               choices = c(1988:2019))),
-               (radioButtons("Gender",
-                             label = "Gender",
-                             choices = c("Men", "Women")))),
-             mainPanel(tabsetPanel(
-               tabPanel("Rankings", 
-                        tableOutput("place_table_worldcup"),
-                        plotlyOutput("top8_plot_wc")),
-               tabPanel("Change Over Time", plotlyOutput("timeplot_worldcup"))
-             ))
+           verticalLayout(
+             (tabsetPanel(
+               tabPanel("Rankings", fluid = TRUE,
+                        sidebarLayout(
+                          sidebarPanel(
+                            (radioButtons("Style",
+                                          label = "Choose the Stroke",
+                                          choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+                            (radioButtons("Distance",
+                                          label = "Select the Distance",
+                                          choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                                          selected = "100")),
+                            (radioButtons("Relay",
+                                          label = "Relay?",
+                                          choices = c("TRUE", "FALSE"),
+                                          selected = "FALSE")),
+                            (selectizeInput("Year", ## fix the input choices here
+                                            label = "Select the Year",
+                                            choices = c(1988:2019))),
+                            (radioButtons("Gender",
+                                          label = "Gender",
+                                          choices = c("Men", "Women")))),
+                          mainPanel(tableOutput("place_table_worldcup"),
+                                    plotlyOutput("top8_plot_wc")))),
+               tabPanel("Change in time over the years", fluid = TRUE,
+                        sidebarLayout(
+                          sidebarPanel(
+                            (radioButtons("Style_wc",
+                                          label = "Choose the Stroke",
+                                          choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+                            (radioButtons("Distance_wc",
+                                          label = "Select the Distance",
+                                          choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                                          selected = "100")),
+                            (radioButtons("Relay_wc",
+                                          label = "Relay?",
+                                          choices = c("TRUE", "FALSE"),
+                                          selected = "FALSE")),
+                            (radioButtons("Gender_wc",
+                                          label = "Gender",
+                                          choices = c("Men", "Women")))),
+                          mainPanel(plotlyOutput("timeplot_worldcup")))),
+               tabPanel("Medals Won by Country Each Year", fluid = TRUE,
+                        (selectizeInput("Year_medal", ## fix the input choices here
+                                        label = "Select the Year",
+                                        choices = c(1988:2019))),
+                        tableOutput("country_medals_wc")))
              )
-           ),
+           )),
   tabPanel("Olympic Games", fluid = TRUE,
            verticalLayout(
              (tabsetPanel(
@@ -62,18 +84,18 @@ ui <- fluidPage(tabsetPanel(
                tabPanel("Change in time over the years", fluid = TRUE,
                         sidebarLayout(
                           sidebarPanel(
-                            (radioButtons("Style_o",
+                            (radioButtons("Style_o_2",
                                           label = "Choose the Stroke",
                                           choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
-                            (radioButtons("Distance_o",
+                            (radioButtons("Distance_o_2",
                                           label = "Select the Distance",
                                           choices = c("50", "100", "200", "400", "500", "1000", "1500"),
                                           selected = "100")),
-                            (radioButtons("Relay_o",
+                            (radioButtons("Relay_o_2",
                                           label = "Relay?",
                                           choices = c("TRUE", "FALSE"),
                                           selected = "FALSE")),
-                            (radioButtons("Gender_o",
+                            (radioButtons("Gender_o_2",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
                           mainPanel(plotlyOutput("timeplot_olympics")))),
@@ -85,109 +107,205 @@ ui <- fluidPage(tabsetPanel(
              )
            )),
   tabPanel("Championships (25m)", fluid = TRUE,
-           sidebarLayout(
-             sidebarPanel(
-               (radioButtons("Style_c",
-                             label = "Choose the Stroke",
-                             choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
-               (radioButtons("Distance_c",
-                             label = "Select the Distance",
-                             choices = c("50", "100", "200", "400", "500", "1000", "1500"),
-                             selected = "100")),
-               (radioButtons("Relay_c",
-                             label = "Relay?",
-                             choices = c("TRUE", "FALSE"), 
-                             selected = "FALSE")),
-               (selectizeInput("Year_c", ## fix the input choices here
-                               label = "Select the Year",
-                               choices = c(1993, 1995, 1997, 1999, seq(2000, 2018, by = 2)))),
-               (radioButtons("Gender_c",
-                             label = "Gender",
-                             choices = c("Men", "Women")))),
-             mainPanel(tabsetPanel(
-               tabPanel("Rankings", tableOutput("place_table_champion1")),
-               tabPanel("Change Over Time", plotlyOutput("timeplot_champion1"))
-             ))
-           )
-  ),
+           verticalLayout(
+             (tabsetPanel(
+               tabPanel("Rankings", fluid = TRUE,
+                        sidebarLayout(
+                          sidebarPanel(
+                            (radioButtons("Style_c",
+                                          label = "Choose the Stroke",
+                                          choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+                            (radioButtons("Distance_c",
+                                          label = "Select the Distance",
+                                          choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                                          selected = "100")),
+                            (radioButtons("Relay_c",
+                                          label = "Relay?",
+                                          choices = c("TRUE", "FALSE"),
+                                          selected = "FALSE")),
+                            (selectizeInput("Year_c", ## fix the input choices here
+                                            label = "Select the Year",
+                                            choices = c(1993, 1995, 1997, 1999, seq(2000, 2018, by = 2)))),
+                            (radioButtons("Gender_c",
+                                          label = "Gender",
+                                          choices = c("Men", "Women")))),
+                          mainPanel(tableOutput("place_table_champion1"),
+                                    plotlyOutput("top8_plot_champion1")))),
+               tabPanel("Change in time over the years", fluid = TRUE,
+                        sidebarLayout(
+                          sidebarPanel(
+                            (radioButtons("Style_c_2",
+                                          label = "Choose the Stroke",
+                                          choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+                            (radioButtons("Distance_c_2",
+                                          label = "Select the Distance",
+                                          choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                                          selected = "100")),
+                            (radioButtons("Relay_c_2",
+                                          label = "Relay?",
+                                          choices = c("TRUE", "FALSE"),
+                                          selected = "FALSE")),
+                            (radioButtons("Gender_c_2",
+                                          label = "Gender",
+                                          choices = c("Men", "Women")))),
+                          mainPanel(plotlyOutput("timeplot_champion1")))),
+               tabPanel("Medals Won by Country Each Year", fluid = TRUE,
+                        (selectizeInput("Year_medal_champion1", ## fix the input choices here
+                                        label = "Select the Year",
+                                        choices = c(1993, 1995, 1997, 1999, seq(2000, 2018, by = 2)))),
+                        tableOutput("country_medals_champion1")))
+             )
+           )),
   tabPanel("Championships (50m)", fluid = TRUE,
-           sidebarLayout(
-             sidebarPanel(
-               (radioButtons("Style_cl",
-                             label = "Choose the Stroke",
-                             choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
-               (radioButtons("Distance_cl",
-                             label = "Select the Distance",
-                             choices = c("50", "100", "200", "400", "500", "1000", "1500"),
-                             selected = "100")),
-               (radioButtons("Relay_cl",
-                             label = "Relay?",
-                             choices = c("TRUE", "FALSE"), 
-                             selected = "FALSE")),
-               (selectizeInput("Year_cl", ## fix the input choices here
-                               label = "Select the Year",
-                               choices = c(1973, 1975, 1978, 1982, 1986, 1991, 1994, 1998, seq(2001, 2019, by = 2)))),
-               (radioButtons("Gender_cl",
-                             label = "Gender",
-                             choices = c("Men", "Women")))),
-             mainPanel(tabsetPanel(
-               tabPanel("Rankings", tableOutput("place_table_champion2")),
-               tabPanel("Change Over Time", plotlyOutput("timeplot_champion2"))
-             ))
-           )
-  ),
+           verticalLayout(
+             (tabsetPanel(
+               tabPanel("Rankings", fluid = TRUE,
+                        sidebarLayout(
+                          sidebarPanel(
+                            (radioButtons("Style_cl",
+                                          label = "Choose the Stroke",
+                                          choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+                            (radioButtons("Distance_cl",
+                                          label = "Select the Distance",
+                                          choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                                          selected = "100")),
+                            (radioButtons("Relay_cl",
+                                          label = "Relay?",
+                                          choices = c("TRUE", "FALSE"),
+                                          selected = "FALSE")),
+                            (selectizeInput("Year_cl", ## fix the input choices here
+                                            label = "Select the Year",
+                                            choices = c(1973, 1975, 1978, 1982, 1986, 1991, 1994, 1998, seq(2001, 2019, by = 2)))),
+                            (radioButtons("Gender_cl",
+                                          label = "Gender",
+                                          choices = c("Men", "Women")))),
+                          mainPanel(tableOutput("place_table_champion2"),
+                                    plotlyOutput("top8_plot_champion2")))),
+               tabPanel("Change in time over the years", fluid = TRUE,
+                        sidebarLayout(
+                          sidebarPanel(
+                            (radioButtons("Style_cl_2",
+                                          label = "Choose the Stroke",
+                                          choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+                            (radioButtons("Distance_cl_2",
+                                          label = "Select the Distance",
+                                          choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                                          selected = "100")),
+                            (radioButtons("Relay_cl_2",
+                                          label = "Relay?",
+                                          choices = c("TRUE", "FALSE"),
+                                          selected = "FALSE")),
+                            (radioButtons("Gender_cl_2",
+                                          label = "Gender",
+                                          choices = c("Men", "Women")))),
+                          mainPanel(plotlyOutput("timeplot_champion2")))),
+               tabPanel("Medals Won by Country Each Year", fluid = TRUE,
+                        (selectizeInput("Year_medal_cl", ## fix the input choices here
+                                        label = "Select the Year",
+                                        choices = c(1973, 1975, 1978, 1982, 1986, 1991, 1994, 1998, seq(2001, 2019, by = 2)))),
+                        tableOutput("country_medals_champion2")))
+             )
+           )),
   tabPanel("Junior Championships", fluid = TRUE,
-           sidebarLayout(
-             sidebarPanel(
-               (radioButtons("Style_jc",
-                             label = "Choose the Stroke",
-                             choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
-               (radioButtons("Distance_jc",
-                             label = "Select the Distance",
-                             choices = c("50", "100", "200", "400", "500", "1000", "1500"),
-                             selected = "100")),
-               (radioButtons("Relay_jc",
-                             label = "Relay?",
-                             choices = c("TRUE", "FALSE"), 
-                             selected = "FALSE")),
-               (selectizeInput("Year_jc", ## fix the input choices here
-                               label = "Select the Year",
-                               choices = c(2006, 2008, seq(2011, 2019, by = 2)))),
-               (radioButtons("Gender_jc",
-                             label = "Gender",
-                             choices = c("Men", "Women")))),
-             mainPanel(tabsetPanel(
-               tabPanel("Rankings", tableOutput("place_table_junior")),
-               tabPanel("Change Over Time", plotlyOutput("timeplot_junior"))
-             ))
-           )
-  ),
-  tabPanel("Youth Olympic Games", fluid = TRUE,
-           sidebarLayout(
-             sidebarPanel(
-               (radioButtons("Style_yo",
-                             label = "Choose the Stroke",
-                             choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
-               (radioButtons("Distance_yo",
-                             label = "Select the Distance",
-                             choices = c("50", "100", "200", "400", "500", "1000", "1500"),
-                             selected = "100")),
-               (radioButtons("Relay_yo",
-                             label = "Relay?",
-                             choices = c("TRUE", "FALSE"), 
-                             selected = "FALSE")),
-               (selectizeInput("Year_yo", ## fix the input choices here
-                               label = "Select the Year",
-                               choices = c(2010, 2014, 2018))),
-               (radioButtons("Gender_yo",
-                             label = "Gender",
-                             choices = c("Men", "Women")))),
-             mainPanel(tabsetPanel(
-               tabPanel("Rankings", tableOutput("place_table_youtholympics")),
-               tabPanel("Change Over Time", plotlyOutput("timeplot_youtholympics"))
-             ))
-           )
-  )
+           verticalLayout(
+             (tabsetPanel(
+               tabPanel("Rankings", fluid = TRUE,
+                        sidebarLayout(
+                          sidebarPanel(
+                            (radioButtons("Style_jc",
+                                          label = "Choose the Stroke",
+                                          choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+                            (radioButtons("Distance_jc",
+                                          label = "Select the Distance",
+                                          choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                                          selected = "100")),
+                            (radioButtons("Relay_jc",
+                                          label = "Relay?",
+                                          choices = c("TRUE", "FALSE"),
+                                          selected = "FALSE")),
+                            (selectizeInput("Year_jc", ## fix the input choices here
+                                            label = "Select the Year",
+                                            choices = c(2006, 2008, seq(2011, 2019, by = 2)))),
+                            (radioButtons("Gender_jc",
+                                          label = "Gender",
+                                          choices = c("Men", "Women")))),
+                          mainPanel(tableOutput("place_table_jc"),
+                                    plotlyOutput("top8_plot_jc")))),
+               tabPanel("Change in time over the years", fluid = TRUE,
+                        sidebarLayout(
+                          sidebarPanel(
+                            (radioButtons("Style_jc_2",
+                                          label = "Choose the Stroke",
+                                          choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+                            (radioButtons("Distance_jc_2",
+                                          label = "Select the Distance",
+                                          choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                                          selected = "100")),
+                            (radioButtons("Relay_jc_2",
+                                          label = "Relay?",
+                                          choices = c("TRUE", "FALSE"),
+                                          selected = "FALSE")),
+                            (radioButtons("Gender_jc_2",
+                                          label = "Gender",
+                                          choices = c("Men", "Women")))),
+                          mainPanel(plotlyOutput("timeplot_jc")))),
+               tabPanel("Medals Won by Country Each Year", fluid = TRUE,
+                        (selectizeInput("Year_medal_jc", ## fix the input choices here
+                                        label = "Select the Year",
+                                        choices = c(2006, 2008, seq(2011, 2019, by = 2)))),
+                        tableOutput("country_medals_jc")))
+             )
+           )),
+  tabPanel("Youth Olympics", fluid = TRUE,
+           verticalLayout(
+             (tabsetPanel(
+               tabPanel("Rankings", fluid = TRUE,
+                        sidebarLayout(
+                          sidebarPanel(
+                            (radioButtons("Style_yo",
+                                          label = "Choose the Stroke",
+                                          choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+                            (radioButtons("Distance_yo",
+                                          label = "Select the Distance",
+                                          choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                                          selected = "100")),
+                            (radioButtons("Relay_yo",
+                                          label = "Relay?",
+                                          choices = c("TRUE", "FALSE"),
+                                          selected = "FALSE")),
+                            (selectizeInput("Year_yo", ## fix the input choices here
+                                            label = "Select the Year",
+                                            choices = c(2010, 2014, 2018))),
+                            (radioButtons("Gender_yo",
+                                          label = "Gender",
+                                          choices = c("Men", "Women")))),
+                          mainPanel(tableOutput("place_table_yo"),
+                                    plotlyOutput("top8_plot_yo")))),
+               tabPanel("Change in time over the years", fluid = TRUE,
+                        sidebarLayout(
+                          sidebarPanel(
+                            (radioButtons("Style_yo_2",
+                                          label = "Choose the Stroke",
+                                          choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
+                            (radioButtons("Distance_yo_2",
+                                          label = "Select the Distance",
+                                          choices = c("50", "100", "200", "400", "500", "1000", "1500"),
+                                          selected = "100")),
+                            (radioButtons("Relay_yo_2",
+                                          label = "Relay?",
+                                          choices = c("TRUE", "FALSE"),
+                                          selected = "FALSE")),
+                            (radioButtons("Gender_yo_2",
+                                          label = "Gender",
+                                          choices = c("Men", "Women")))),
+                          mainPanel(plotlyOutput("timeplot_yo")))),
+               tabPanel("Medals Won by Country Each Year", fluid = TRUE,
+                        (selectizeInput("Year_medal_yo", ## fix the input choices here
+                                        label = "Select the Year",
+                                        choices = c(2010, 2014, 2018))),
+                        tableOutput("country_medals_yo")))
+             )
+           ))
   ))
 server <- function(input, output, session) {
   filtered_worldcup <- reactive({
@@ -270,10 +388,10 @@ server <- function(input, output, session) {
   })
   time_plot_worldcup <- reactive({
     detailed_results %>% filter(series == "World Cup") %>%
-      filter(gender == input$Gender) %>%
-      filter(relay == input$Relay) %>%
-      filter(distance == input$Distance) %>%
-      filter(style == input$Style) %>%
+      filter(gender == input$Gender_wc) %>%
+      filter(relay == input$Relay_wc) %>%
+      filter(distance == input$Distance_wc) %>%
+      filter(style == input$Style_wc) %>%
       group_by(year) %>%
       summarise(averagetime = mean(time, na.rm = TRUE),
                 se = sd(time, na.rm = TRUE)/sqrt(100),
@@ -291,10 +409,10 @@ server <- function(input, output, session) {
   })
   time_plot_olympics <- reactive({
     detailed_results %>% filter(series == "Olympic Games") %>%
-      filter(gender == input$Gender_o) %>%
-      filter(relay == input$Relay_o) %>%
-      filter(distance == input$Distance_o) %>%
-      filter(style == input$Style_o) %>%
+      filter(gender == input$Gender_o_2) %>%
+      filter(relay == input$Relay_o_2) %>%
+      filter(distance == input$Distance_o_2) %>%
+      filter(style == input$Style_o_2) %>%
       group_by(year) %>%
       summarise(averagetime = mean(time, na.rm = TRUE),
                 se = sd(time, na.rm = TRUE)/sqrt(100),
@@ -312,10 +430,10 @@ server <- function(input, output, session) {
   })
   time_plot_champion1 <- reactive({
     detailed_results %>% filter(series == "Championships (25m)") %>%
-      filter(gender == input$Gender_c) %>%
-      filter(relay == input$Relay_c) %>%
-      filter(distance == input$Distance_c) %>%
-      filter(style == input$Style_c) %>%
+      filter(gender == input$Gender_c_2) %>%
+      filter(relay == input$Relay_c_2) %>%
+      filter(distance == input$Distance_c_2) %>%
+      filter(style == input$Style_c_2) %>%
       group_by(year) %>%
       summarise(averagetime = mean(time, na.rm = TRUE),
                 se = sd(time, na.rm = TRUE)/sqrt(100),
@@ -333,10 +451,10 @@ server <- function(input, output, session) {
   })
   time_plot_champion2 <- reactive({
     detailed_results %>% filter(series == "Championships (50m)") %>%
-      filter(gender == input$Gender_cl) %>%
-      filter(relay == input$Relay_cl) %>%
-      filter(distance == input$Distance_cl) %>%
-      filter(style == input$Style_cl) %>%
+      filter(gender == input$Gender_cl_2) %>%
+      filter(relay == input$Relay_cl_2) %>%
+      filter(distance == input$Distance_cl_2) %>%
+      filter(style == input$Style_cl_2) %>%
       group_by(year) %>%
       summarise(averagetime = mean(time, na.rm = TRUE),
                 se = sd(time, na.rm = TRUE)/sqrt(100),
@@ -354,10 +472,10 @@ server <- function(input, output, session) {
   })
   time_plot_junior <- reactive({
     detailed_results %>% filter(series == "Junior Championships") %>%
-      filter(gender == input$Gender_jc) %>%
-      filter(relay == input$Relay_jc) %>%
-      filter(distance == input$Distance_jc) %>%
-      filter(style == input$Style_jc) %>%
+      filter(gender == input$Gender_jc_2) %>%
+      filter(relay == input$Relay_jc_2) %>%
+      filter(distance == input$Distance_jc_2) %>%
+      filter(style == input$Style_jc_2) %>%
       group_by(year) %>%
       summarise(averagetime = mean(time, na.rm = TRUE),
                 se = sd(time, na.rm = TRUE)/sqrt(100),
@@ -370,15 +488,15 @@ server <- function(input, output, session) {
       geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
       labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
   })
-  output$timeplot_junior <- renderPlotly({
+  output$timeplot_jc <- renderPlotly({
     ggplotly(time_plot_junior_plotly())
   })
   time_plot_youtholympics <- reactive({
     detailed_results %>% filter(series == "Youth Olympic Games") %>%
-      filter(gender == input$Gender_yo) %>%
-      filter(relay == input$Relay_yo) %>%
-      filter(distance == input$Distance_yo) %>%
-      filter(style == input$Style_yo) %>%
+      filter(gender == input$Gender_yo_2) %>%
+      filter(relay == input$Relay_yo_2) %>%
+      filter(distance == input$Distance_yo_2) %>%
+      filter(style == input$Style_yo_2) %>%
       group_by(year) %>%
       summarise(averagetime = mean(time, na.rm = TRUE),
                 se = sd(time, na.rm = TRUE)/sqrt(100),
@@ -398,7 +516,7 @@ server <- function(input, output, session) {
     detailed_results %>% filter(series == "Olympic Games") %>%
       filter(phase_label == "Final") %>%
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      filter(year == 2008) %>%
+      filter(year == input$Year_o_medal) %>%
       group_by(ioc_code, rank) %>%
       summarise(medals = n()) %>%
       pivot_wider(names_from = rank,
@@ -415,6 +533,116 @@ server <- function(input, output, session) {
   })
   output$country_medals_o <- renderTable({
     country_medals_df_o()
+  })
+  country_medals_df_wc <- reactive({
+    detailed_results %>% filter(series == "World Cup") %>%
+      filter(phase_label == "Final") %>%
+      filter(rank == 1 | rank == 2 | rank == 3) %>%
+      filter(year == input$Year_medal) %>%
+      group_by(ioc_code, rank) %>%
+      summarise(medals = n()) %>%
+      pivot_wider(names_from = rank,
+                  values_from = medals) %>%
+      mutate(gold = as.numeric(`1`),
+             silver = as.numeric(`2`),
+             bronze = as.numeric(`3`)) %>% 
+      mutate(Gold = case_when(is.na(gold) ~ 0, !is.na(gold) ~ gold),
+             Silver = case_when(is.na(silver) ~ 0, !is.na(silver) ~ silver),
+             Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
+      mutate(totalmedals = Gold + Silver + Bronze) %>%
+      select(ioc_code, Gold, Silver, Bronze, totalmedals) %>%
+      arrange(desc(totalmedals))
+  })
+  output$country_medals_wc <- renderTable({
+    country_medals_df_wc()
+  })
+  country_medals_df_champion1 <- reactive({
+    detailed_results %>% filter(series == "Championships (25m)") %>%
+      filter(phase_label == "Final") %>%
+      filter(rank == 1 | rank == 2 | rank == 3) %>%
+      filter(year == input$Year_medal_champion1) %>%
+      group_by(ioc_code, rank) %>%
+      summarise(medals = n()) %>%
+      pivot_wider(names_from = rank,
+                  values_from = medals) %>%
+      mutate(gold = as.numeric(`1`),
+             silver = as.numeric(`2`),
+             bronze = as.numeric(`3`)) %>% 
+      mutate(Gold = case_when(is.na(gold) ~ 0, !is.na(gold) ~ gold),
+             Silver = case_when(is.na(silver) ~ 0, !is.na(silver) ~ silver),
+             Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
+      mutate(totalmedals = Gold + Silver + Bronze) %>%
+      select(ioc_code, Gold, Silver, Bronze, totalmedals) %>%
+      arrange(desc(totalmedals))
+  })
+  output$country_medals_champion1 <- renderTable({
+    country_medals_df_champion1()
+  })
+  country_medals_df_champion2 <- reactive({
+    detailed_results %>% filter(series == "Championships (50m)") %>%
+      filter(phase_label == "Final") %>%
+      filter(rank == 1 | rank == 2 | rank == 3) %>%
+      filter(year == input$Year_medal_champion2) %>%
+      group_by(ioc_code, rank) %>%
+      summarise(medals = n()) %>%
+      pivot_wider(names_from = rank,
+                  values_from = medals) %>%
+      mutate(gold = as.numeric(`1`),
+             silver = as.numeric(`2`),
+             bronze = as.numeric(`3`)) %>% 
+      mutate(Gold = case_when(is.na(gold) ~ 0, !is.na(gold) ~ gold),
+             Silver = case_when(is.na(silver) ~ 0, !is.na(silver) ~ silver),
+             Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
+      mutate(totalmedals = Gold + Silver + Bronze) %>%
+      select(ioc_code, Gold, Silver, Bronze, totalmedals) %>%
+      arrange(desc(totalmedals))
+  })
+  output$country_medals_champion2 <- renderTable({
+    country_medals_df_champion2()
+  })
+  country_medals_df_jc <- reactive({
+    detailed_results %>% filter(series == "Junior Championships") %>%
+      filter(phase_label == "Final") %>%
+      filter(rank == 1 | rank == 2 | rank == 3) %>%
+      filter(year == input$Year_medal_jc) %>%
+      group_by(ioc_code, rank) %>%
+      summarise(medals = n()) %>%
+      pivot_wider(names_from = rank,
+                  values_from = medals) %>%
+      mutate(gold = as.numeric(`1`),
+             silver = as.numeric(`2`),
+             bronze = as.numeric(`3`)) %>% 
+      mutate(Gold = case_when(is.na(gold) ~ 0, !is.na(gold) ~ gold),
+             Silver = case_when(is.na(silver) ~ 0, !is.na(silver) ~ silver),
+             Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
+      mutate(totalmedals = Gold + Silver + Bronze) %>%
+      select(ioc_code, Gold, Silver, Bronze, totalmedals) %>%
+      arrange(desc(totalmedals))
+  })
+  output$country_medals_jc <- renderTable({
+    country_medals_df_jc()
+  })
+  country_medals_df_yo <- reactive({
+    detailed_results %>% filter(series == "Youth Olympics") %>%
+      filter(phase_label == "Final") %>%
+      filter(rank == 1 | rank == 2 | rank == 3) %>%
+      filter(year == input$Year_medal_yo) %>%
+      group_by(ioc_code, rank) %>%
+      summarise(medals = n()) %>%
+      pivot_wider(names_from = rank,
+                  values_from = medals) %>%
+      mutate(gold = as.numeric(`1`),
+             silver = as.numeric(`2`),
+             bronze = as.numeric(`3`)) %>% 
+      mutate(Gold = case_when(is.na(gold) ~ 0, !is.na(gold) ~ gold),
+             Silver = case_when(is.na(silver) ~ 0, !is.na(silver) ~ silver),
+             Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
+      mutate(totalmedals = Gold + Silver + Bronze) %>%
+      select(ioc_code, Gold, Silver, Bronze, totalmedals) %>%
+      arrange(desc(totalmedals))
+  })
+  output$country_medals_yo <- renderTable({
+    country_medals_df_yo()
   })
   top8_df_wc <- reactive({
     detailed_results %>% filter(series == "World Cup") %>%
@@ -469,7 +697,114 @@ server <- function(input, output, session) {
   output$top8_plot_o <- renderPlotly({
     ggplotly(top8ploto())
   })
+  top8_df_champion1 <- reactive({
+    detailed_results %>% filter(series == "Championships (25m)") %>%
+      filter(gender == input$Gender_c) %>%
+      filter(relay == input$Relay_c) %>%
+      filter(distance == input$Distance_c) %>%
+      filter(style == input$Style_c) %>%
+      filter(year == input$Year_c) %>%
+      filter(phase_label == "Final") %>%
+      arrange(desc(phase_label)) %>%
+      slice(1:8) %>%
+      mutate(timebehind = case_when(is.na(time_behind) ~ "0", 
+                                    !is.na(time_behind) ~ time_behind)) %>%
+      mutate(name_ordered = fct_reorder(.f = family_name, .x = desc(timebehind)))
+  })
   
+  top8plotc <- reactive({
+    ggplot(data = top8_df_champion1(), aes(x = name_ordered, y = timebehind, fill = ioc_code)) +
+      geom_col() +
+      coord_flip() +
+      labs(x = "Time Behind",
+           y = "Swimmer",
+           title = "Top 8 Finishers Time Difference from First Place Finisher",
+           fill = "Country")
+  })
+  output$top8_plot_champion1 <- renderPlotly({
+    ggplotly(top8plotc())
+  })
+  top8_df_champion2 <- reactive({
+    detailed_results %>% filter(series == "Championships (50m)") %>%
+      filter(gender == input$Gender_cl) %>%
+      filter(relay == input$Relay_cl) %>%
+      filter(distance == input$Distance_cl) %>%
+      filter(style == input$Style_cl) %>%
+      filter(year == input$Year_cl) %>%
+      filter(phase_label == "Final") %>%
+      arrange(desc(phase_label)) %>%
+      slice(1:8) %>%
+      mutate(timebehind = case_when(is.na(time_behind) ~ "0", 
+                                    !is.na(time_behind) ~ time_behind)) %>%
+      mutate(name_ordered = fct_reorder(.f = family_name, .x = desc(timebehind)))
+  })
+  
+  top8plotc2 <- reactive({
+    ggplot(data = top8_df_champion2(), aes(x = name_ordered, y = timebehind, fill = ioc_code)) +
+      geom_col() +
+      coord_flip() +
+      labs(x = "Time Behind",
+           y = "Swimmer",
+           title = "Top 8 Finishers Time Difference from First Place Finisher",
+           fill = "Country")
+  })
+  output$top8_plot_champion2 <- renderPlotly({
+    ggplotly(top8plotc2())
+  })
+  top8_df_jc <- reactive({
+    detailed_results %>% filter(series == "Junior Championships") %>%
+      filter(gender == input$Gender_jc) %>%
+      filter(relay == input$Relay_jc) %>%
+      filter(distance == input$Distance_jc) %>%
+      filter(style == input$Style_jc) %>%
+      filter(year == input$Year_jc) %>%
+      filter(phase_label == "Final") %>%
+      arrange(desc(phase_label)) %>%
+      slice(1:8) %>%
+      mutate(timebehind = case_when(is.na(time_behind) ~ "0", 
+                                    !is.na(time_behind) ~ time_behind)) %>%
+      mutate(name_ordered = fct_reorder(.f = family_name, .x = desc(timebehind)))
+  })
+  
+  top8plotjc <- reactive({
+    ggplot(data = top8_df_jc(), aes(x = name_ordered, y = timebehind, fill = ioc_code)) +
+      geom_col() +
+      coord_flip() +
+      labs(x = "Time Behind",
+           y = "Swimmer",
+           title = "Top 8 Finishers Time Difference from First Place Finisher",
+           fill = "Country")
+  })
+  output$top8_plot_jc <- renderPlotly({
+    ggplotly(top8plotjc())
+  })
+  top8_df_yo <- reactive({
+    detailed_results %>% filter(series == "Youth Olympics") %>%
+      filter(gender == input$Gender_yo) %>%
+      filter(relay == input$Relay_yo) %>%
+      filter(distance == input$Distance_yo) %>%
+      filter(style == input$Style_yo) %>%
+      filter(year == input$Year_yo) %>%
+      filter(phase_label == "Final") %>%
+      arrange(desc(phase_label)) %>%
+      slice(1:8) %>%
+      mutate(timebehind = case_when(is.na(time_behind) ~ "0", 
+                                    !is.na(time_behind) ~ time_behind)) %>%
+      mutate(name_ordered = fct_reorder(.f = family_name, .x = desc(timebehind)))
+  })
+  
+  top8plotyo <- reactive({
+    ggplot(data = top8_df_yo(), aes(x = name_ordered, y = timebehind, fill = ioc_code)) +
+      geom_col() +
+      coord_flip() +
+      labs(x = "Time Behind",
+           y = "Swimmer",
+           title = "Top 8 Finishers Time Difference from First Place Finisher",
+           fill = "Country")
+  })
+  output$top8_plot_yo <- renderPlotly({
+    ggplotly(top8plotyo())
+  })
 }
 
 shinyApp(ui, server)

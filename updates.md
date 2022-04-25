@@ -50,3 +50,8 @@ In between the last two classes I have been working still on the two visualizati
 
 During class today I fixed the olympic medal visualization, so now it works. I then began working on fixing the layout of my app because the way it was was not working for me. I decided I'm going to do separate inputs for each graph, which seems like a lot, but all the graphs use different inputs, so if this isn't done this way the graphs could become more confusing for the user. They may be confused why they are able to choose a year for a graph that looks at the times across all years, so this is just to fix that issue. I had a lot of parentheses issues with this, but I figured it out by the end. This part is only updated in the Olympic Games part of the project. So, now I feel pretty comfortable with all my graphics and the layout, I just have to update the rest of the project.
 
+## April 25 Beginning of Class
+
+In between the last two classes I finished getting the rest of the graphics into the app. I also fixed the organization of the app, or attempted to so that the inputs make more sense with the graphs. Before it was hard to tell what graphics needed what inputs, so now they have been fixed. I now need to fix the tables and graphs, so they look more visually pleasing and possibly add some more visualizations. When I put the last few graphics in, some of them are not working correctly, so I'm not entirely sure what I did wrong there, but I also have been working on fixing those. 
+
+
