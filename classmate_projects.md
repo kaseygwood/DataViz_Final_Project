@@ -21,3 +21,8 @@ Lily Kasperek: Lily has been working on a blogdown with different data sets. She
 ## April 20
 
 Shane: He is working on a project that also looks at data from a sports team. He is looking at soccer data by player and split it up in tabs of graphics that show each different type of the sport. Like passing, scoring, etc.. He is just working through it because it just takes a lot of code and isn't really having any issues yet with it.
+
+## April 24
+
+Kaden: Kaden is working on a shiny app similar to mine that shows hockey data throughout one year and is specified to specific teams. The app has different tabs that allow the user to select a team and then will show a graph depending on what tab is clicked that shows the visualization for that graph.
+

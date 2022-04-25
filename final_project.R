@@ -2,16 +2,23 @@ library(tidyverse)
 library(shiny)
 library(plotly)
 library(knitr)
+library(shinythemes)
+library(ggthemes)
+
+
 
 detailed_results <- fina_join()
 
-ui <- fluidPage(tabsetPanel(
+ui <- fluidPage(theme = shinytheme("superhero"),
+                titlePanel("Professional Swimming Results"),
+                tabsetPanel(
   tabPanel("World Cup", fluid = TRUE,
            verticalLayout(
              (tabsetPanel(
                tabPanel("Rankings", fluid = TRUE,
                         sidebarLayout(
                           sidebarPanel(
+                            h4("Select the Event"),
                             (radioButtons("Style",
                                           label = "Choose the Stroke",
                                           choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
@@ -29,11 +36,14 @@ ui <- fluidPage(tabsetPanel(
                             (radioButtons("Gender",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
-                          mainPanel(tableOutput("place_table_worldcup"),
+                          mainPanel(h3("Top Three Finishers"),
+                                    tableOutput("place_table_worldcup"),
+                                    h3("Top Eight Finishers"),
                                     plotlyOutput("top8_plot_wc")))),
                tabPanel("Change in time over the years", fluid = TRUE,
                         sidebarLayout(
                           sidebarPanel(
+                            h4("Select the Event"),
                             (radioButtons("Style_wc",
                                           label = "Choose the Stroke",
                                           choices = c("Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Medley"))),
@@ -200,7 +210,7 @@ ui <- fluidPage(tabsetPanel(
                                           choices = c("Men", "Women")))),
                           mainPanel(plotlyOutput("timeplot_champion2")))),
                tabPanel("Medals Won by Country Each Year", fluid = TRUE,
-                        (selectizeInput("Year_medal_cl", ## fix the input choices here
+                        (selectizeInput("Year_medal_champion2", ## fix the input choices here
                                         label = "Select the Year",
                                         choices = c(1973, 1975, 1978, 1982, 1986, 1991, 1994, 1998, seq(2001, 2019, by = 2)))),
                         tableOutput("country_medals_champion2")))
@@ -279,7 +289,7 @@ ui <- fluidPage(tabsetPanel(
                             (radioButtons("Gender_yo",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
-                          mainPanel(tableOutput("place_table_yo"),
+                          mainPanel(tableOutput("place_table_youtholympics"),
                                     plotlyOutput("top8_plot_yo")))),
                tabPanel("Change in time over the years", fluid = TRUE,
                         sidebarLayout(
@@ -304,9 +314,11 @@ ui <- fluidPage(tabsetPanel(
                                         label = "Select the Year",
                                         choices = c(2010, 2014, 2018))),
                         tableOutput("country_medals_yo")))
+              
              )
            ))
   ))
+
 server <- function(input, output, session) {
   filtered_worldcup <- reactive({
     detailed_results %>% filter(series == "World Cup") %>%
@@ -359,32 +371,62 @@ server <- function(input, output, session) {
   output$place_table_worldcup <- renderTable({
     filtered_worldcup() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      select(rank, ioc_code, family_name, first_name, str_time)
+      select(rank, ioc_code, family_name, first_name, str_time) %>%
+      rename("Place" = "rank") %>%
+      rename("Country" = "ioc_code") %>%
+      rename("Last Name" = "family_name",
+             "First Name" = "first_name",
+             "Time" = "str_time")
   })
   output$place_table_olympics <- renderTable({
     filtered_olympics() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      select(rank, ioc_code, family_name, first_name, str_time)
+      select(rank, ioc_code, family_name, first_name, str_time) %>%
+      rename("Place" = "rank",
+             "Country" = "ioc_code",
+             "Last Name" = "family_name",
+             "First Name" = "first_name",
+             "Time" = "str_time")
   })
   output$place_table_champion1 <- renderTable({
     filtered_champion1() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      select(rank, ioc_code, family_name, first_name, str_time)
+      select(rank, ioc_code, family_name, first_name, str_time) %>%
+      rename("Place" = "rank",
+             "Country" = "ioc_code",
+             "Last Name" = "family_name",
+             "First Name" = "first_name",
+             "Time" = "str_time")
   })
   output$place_table_champion2 <- renderTable({
     filtered_champion2() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      select(rank, ioc_code, family_name, first_name, str_time)
+      select(rank, ioc_code, family_name, first_name, str_time) %>%
+      rename("Place" = "rank",
+             "Country" = "ioc_code",
+             "Last Name" = "family_name",
+             "First Name" = "first_name",
+             "Time" = "str_time")
   })
   output$place_table_junior <- renderTable({
     filtered_junior() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      select(rank, ioc_code, family_name, first_name, str_time)
+      select(rank, ioc_code, family_name, first_name, str_time) %>%
+      rename("Place" = "rank",
+             "Country" = "ioc_code",
+             "Last Name" = "family_name",
+             "First Name" = "first_name",
+             "Time" = "str_time")
   })
   output$place_table_youtholympics <- renderTable({
     filtered_youtholympics() %>% filter(phase_label == "Final") %>% 
       filter(rank == 1 | rank == 2 | rank == 3) %>%
-      select(rank, ioc_code, family_name, first_name, str_time)
+      select(rank, ioc_code, family_name, first_name, str_time) %>%
+      rename("Place" = "rank",
+             "Country" = "ioc_code",
+             "Last Name" = "family_name",
+             "First Name" = "first_name",
+             "Time" = "str_time")
   })
   time_plot_worldcup <- reactive({
     detailed_results %>% filter(series == "World Cup") %>%
@@ -402,7 +444,8 @@ server <- function(input, output, session) {
     ggplot(data = time_plot_worldcup(), aes(x = year, y = averagetime)) +
       geom_point() +
       geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
-      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
+      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years") +
+      theme_calc()
   })
   output$timeplot_worldcup <- renderPlotly({
     ggplotly(time_plot_worldcup_plotly())
@@ -424,6 +467,7 @@ server <- function(input, output, session) {
       geom_point() +
       geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
       labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
+    
   })
   output$timeplot_olympics <- renderPlotly({
     ggplotly(time_plot_olympics_plotly())
@@ -529,7 +573,9 @@ server <- function(input, output, session) {
              Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
       mutate(totalmedals = Gold + Silver + Bronze) %>%
       select(ioc_code, Gold, Silver, Bronze, totalmedals) %>%
-      arrange(desc(totalmedals))
+      arrange(desc(totalmedals)) %>%
+      rename("Country" = "ioc_code",
+             "Total Medals" = "totalmedals")
   })
   output$country_medals_o <- renderTable({
     country_medals_df_o()
@@ -551,7 +597,9 @@ server <- function(input, output, session) {
              Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
       mutate(totalmedals = Gold + Silver + Bronze) %>%
       select(ioc_code, Gold, Silver, Bronze, totalmedals) %>%
-      arrange(desc(totalmedals))
+      arrange(desc(totalmedals)) %>%
+      rename("Country" = "ioc_code",
+             "Total Medals" = "totalmedals")
   })
   output$country_medals_wc <- renderTable({
     country_medals_df_wc()
@@ -573,7 +621,9 @@ server <- function(input, output, session) {
              Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
       mutate(totalmedals = Gold + Silver + Bronze) %>%
       select(ioc_code, Gold, Silver, Bronze, totalmedals) %>%
-      arrange(desc(totalmedals))
+      arrange(desc(totalmedals)) %>%
+      rename("Country" = "ioc_code",
+             "Total Medals" = "totalmedals")
   })
   output$country_medals_champion1 <- renderTable({
     country_medals_df_champion1()
@@ -595,7 +645,9 @@ server <- function(input, output, session) {
              Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
       mutate(totalmedals = Gold + Silver + Bronze) %>%
       select(ioc_code, Gold, Silver, Bronze, totalmedals) %>%
-      arrange(desc(totalmedals))
+      arrange(desc(totalmedals)) %>%
+      rename("Country" = "ioc_code",
+             "Total Medals" = "totalmedals")
   })
   output$country_medals_champion2 <- renderTable({
     country_medals_df_champion2()
@@ -617,13 +669,15 @@ server <- function(input, output, session) {
              Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
       mutate(totalmedals = Gold + Silver + Bronze) %>%
       select(ioc_code, Gold, Silver, Bronze, totalmedals) %>%
-      arrange(desc(totalmedals))
+      arrange(desc(totalmedals)) %>%
+      rename("Country" = "ioc_code",
+             "Total Medals" = "totalmedals")
   })
   output$country_medals_jc <- renderTable({
     country_medals_df_jc()
   })
   country_medals_df_yo <- reactive({
-    detailed_results %>% filter(series == "Youth Olympics") %>%
+    detailed_results %>% filter(series == "Youth Olympic Games") %>%
       filter(phase_label == "Final") %>%
       filter(rank == 1 | rank == 2 | rank == 3) %>%
       filter(year == input$Year_medal_yo) %>%
@@ -639,7 +693,9 @@ server <- function(input, output, session) {
              Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
       mutate(totalmedals = Gold + Silver + Bronze) %>%
       select(ioc_code, Gold, Silver, Bronze, totalmedals) %>%
-      arrange(desc(totalmedals))
+      arrange(desc(totalmedals)) %>%
+      rename("Country" = "ioc_code",
+             "Total Medals" = "totalmedals")
   })
   output$country_medals_yo <- renderTable({
     country_medals_df_yo()
@@ -656,7 +712,7 @@ server <- function(input, output, session) {
       slice(1:8) %>%
       mutate(timebehind = case_when(is.na(time_behind) ~ "0", 
                                     !is.na(time_behind) ~ time_behind)) %>%
-      mutate(name_ordered = fct_reorder(.f = family_name, .x = desc(timebehind)))
+      mutate(name_ordered = fct_reorder(.f = family_name, .x = desc(timebehind))) 
   })
   top8plotwc <- reactive({
     ggplot(data = top8_df_wc(), aes(x = name_ordered, y = timebehind, fill = ioc_code)) +
@@ -664,7 +720,6 @@ server <- function(input, output, session) {
       coord_flip() +
       labs(x = "Time Behind",
            y = "Swimmer",
-           title = "Top 8 Finishers Time Difference from First Place Finisher",
            fill = "Country")
   })
   output$top8_plot_wc <- renderPlotly({
@@ -779,7 +834,7 @@ server <- function(input, output, session) {
     ggplotly(top8plotjc())
   })
   top8_df_yo <- reactive({
-    detailed_results %>% filter(series == "Youth Olympics") %>%
+    detailed_results %>% filter(series == "Youth Olympic Games") %>%
       filter(gender == input$Gender_yo) %>%
       filter(relay == input$Relay_yo) %>%
       filter(distance == input$Distance_yo) %>%

@@ -266,3 +266,18 @@ x <- ggplot(data = test, aes(x = year, y = averagetime)) +
 
 ggplotly(x)
 ```
+
+```{r}
+detailed_results %>% filter(series == "Youth Olympics") %>%
+      filter(phase_label == "Final") %>%
+      filter(rank == 1 | rank == 2 | rank == 3) %>%
+      filter(year == 2006) %>%
+      group_by(ioc_code, rank) %>%
+      summarise(medals = n()) %>%
+      pivot_wider(names_from = rank,
+                  values_from = medals)
+
+detailed_results %>% filter(series == "Youth Olympics") 
+detailed_results %>% group_by(series) %>%
+  summarise(n = n())
+```

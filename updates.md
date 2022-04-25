@@ -54,4 +54,8 @@ During class today I fixed the olympic medal visualization, so now it works. I t
 
 In between the last two classes I finished getting the rest of the graphics into the app. I also fixed the organization of the app, or attempted to so that the inputs make more sense with the graphs. Before it was hard to tell what graphics needed what inputs, so now they have been fixed. I now need to fix the tables and graphs, so they look more visually pleasing and possibly add some more visualizations. When I put the last few graphics in, some of them are not working correctly, so I'm not entirely sure what I did wrong there, but I also have been working on fixing those. 
 
+## April 25 End of Class
+
+Fixed the graphics that weren't working due to misspellings for inputs and outputs. I then worked on adding a theme and organizing the app so it looks nicer. I'm doing this to make sure it can get done before I add more visualizations. I have also begun checking out headers, so the user understands what the app is doing. I took out the title for the top 8 graph, so I need to decide whether to put the title as a header in the graph or the app (I think app will look better). Mostly just tidying up the app to make it look nicer, just testing out different themes and versions of things that will go best with my app.
+
 
