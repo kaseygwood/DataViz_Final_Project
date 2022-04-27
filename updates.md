@@ -62,4 +62,8 @@ Fixed the graphics that weren't working due to misspellings for inputs and outpu
 
 In between the last two classes I worked on adding more labels into my app. I also then worked on making themes for the different ggplots, but I am struggling to get these to work how I want and it is also difficult to make the theme match my shiny theme. I then began starting a new visualization that is very similar to one I already have, but it is more difficult to get into the app due to the way the choices are made. For some reason the code isn't working correctly because of the NA values, but it works for some of the countries. Basically the code works if a country won each type of medal every year, but if they didn't then it is missing variables and it doesn't work as well. So, I am trying to work through that, but if I can't, then I will most likely omit the chart from my app.
 
+## April 27 End of Class
+
+Worked on adding an overall average for the time plot, but can't decide whether to place it as a table and just a value, or put it on the plot as a point. I can't find a way to make it look good as just a value because of the way the theme is working. I have been trying to change the font of my ggplots, but when I change it they are all coming out in times new roman font no matter what I choose for the font. I also changed the selected years for the place table etc. because there were times when it wouldn't show up for a specific year, so I decided to make the most recent year what's selected.
+
 

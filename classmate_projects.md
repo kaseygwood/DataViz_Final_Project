@@ -26,3 +26,7 @@ Shane: He is working on a project that also looks at data from a sports team. He
 
 Kaden: Kaden is working on a shiny app similar to mine that shows hockey data throughout one year and is specified to specific teams. The app has different tabs that allow the user to select a team and then will show a graph depending on what tab is clicked that shows the visualization for that graph.
 
+## April 27
+
+Charlie: Charlie is working on creating an r package that can scrape data from ecac hockey and create different plots from this. So, the package is mostly for people who do not know how to use r. He said his project has been mostly figuring out how to do the package part, so he hasn't been able to make as cool visualizations, but the package part has been really cool.
+

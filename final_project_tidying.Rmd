@@ -281,3 +281,66 @@ detailed_results %>% filter(series == "Youth Olympics")
 detailed_results %>% group_by(series) %>%
   summarise(n = n())
 ```
+
+```{r}
+detailed_results %>% filter(series == "Olympic Games") %>%
+      filter(phase_label == "Final") %>%
+      filter(rank == 1 | rank == 2 | rank == 3) %>%
+      filter(ioc_code == "USA") %>%
+      group_by(year, rank) %>%
+      summarise(medals = n()) %>%
+      pivot_wider(names_from = rank,
+                  values_from = medals) %>%
+      mutate(gold = as.numeric(`1`),
+             silver = as.numeric(`2`),
+             bronze = as.numeric(`3`)) %>% 
+      mutate(Gold = case_when(is.na(gold) ~ 0, !is.na(gold) ~ gold),
+             Silver = case_when(is.na(silver) ~ 0, !is.na(silver) ~ silver),
+             Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
+      mutate(totalmedals = Gold + Silver + Bronze) %>%
+      select(year, Gold, Silver, Bronze, totalmedals) %>%
+      arrange(desc(totalmedals)) %>%
+      rename("Year" = "year",
+             "Total Medals" = "totalmedals")
+detailed_results %>% 
+  filter(phase_label == "Final") %>%
+  filter(rank == 1 | rank == 2 | rank == 3) %>% 
+  group_by(ioc_code) %>%
+  summarise(n = n())
+```
+
+```{r}
+View(detailed_results)
+detailed_results %>% filter(series == "World Cup") %>%
+    filter(gender == input$Gender_wc) %>%
+    filter(relay == input$Relay_wc) %>%
+    filter(distance == input$Distance_wc) %>%
+    filter(style == input$Style_wc) %>%
+    group_by(year) %>%
+    summarise(averagetime = mean(time, na.rm = TRUE),
+              se = sd(time, na.rm = TRUE)/sqrt(100),
+              l_se = averagetime - se,
+              u_se = averagetime + se)
+
+## average overall over the years
+detailed_results %>% filter(series == "World Cup") %>%
+  filter(gender == "Men") %>%
+  filter(relay == "FALSE") %>%
+  filter(distance == "200") %>%
+  filter(style == "Freestyle") %>%
+  summarise(averagetime = mean(time, na.rm = TRUE))
+theme = shinytheme("superhero")
+View(detailed_results)
+```
+
+```{r}
+test <- detailed_results %>% filter(series == "World Cup") %>%
+      filter(style == "Freestyle") %>%
+      filter(distance == "100") %>%
+      filter(relay == "FALSE") %>%
+      filter(year == 2019) %>%
+      filter(gender == "Men") %>% 
+      filter(phase_label == "Final") %>% 
+      filter(rank == 1 | rank == 2 | rank == 3)
+View(test)
+```

@@ -32,7 +32,8 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                                           selected = "FALSE")),
                             (selectizeInput("Year", ## fix the input choices here
                                             label = "Select the Year",
-                                            choices = c(1988:2019))),
+                                            choices = c(1988:2019),
+                                            selected = 2019)),
                             (radioButtons("Gender",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
@@ -59,7 +60,8 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                             (radioButtons("Gender_wc",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
-                          mainPanel(plotlyOutput("timeplot_worldcup")))),
+                          mainPanel(tableOutput("average_wc"),
+                                    plotlyOutput("timeplot_worldcup")))),
                tabPanel("Medals Won by Country Each Year", fluid = TRUE,
                         (selectizeInput("Year_medal", ## fix the input choices here
                                         label = "Select the Year",
@@ -86,7 +88,8 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                                           selected = "FALSE")),
                             (selectizeInput("Year_o", ## fix the input choices here
                                             label = "Select the Year",
-                                            choices = c(seq(1924, 2016, by = 4)))),
+                                            choices = c(seq(1924, 2016, by = 4)),
+                                            selected = 2016)),
                             (radioButtons("Gender_o",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
@@ -117,11 +120,7 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                         (selectizeInput("Year_o_medal", ## fix the input choices here
                                         label = "Select the Year",
                                         choices = c(seq(1924, 2016, by = 4)))),
-                        tableOutput("country_medals_o"),
-                        selectizeInput("country_o",
-                                       label = "Select the Country",
-                                       choices = detailed_results$ioc_code),
-                        tableOutput("year_medals_o")))
+                        tableOutput("country_medals_o")))
              )
            )),
   tabPanel("Championships (25m)", fluid = TRUE,
@@ -143,7 +142,8 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                                           selected = "FALSE")),
                             (selectizeInput("Year_c", ## fix the input choices here
                                             label = "Select the Year",
-                                            choices = c(1993, 1995, 1997, 1999, seq(2000, 2018, by = 2)))),
+                                            choices = c(1993, 1995, 1997, 1999, seq(2000, 2018, by = 2)),
+                                            selected = 2018)),
                             (radioButtons("Gender_c",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
@@ -196,7 +196,8 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                                           selected = "FALSE")),
                             (selectizeInput("Year_cl", ## fix the input choices here
                                             label = "Select the Year",
-                                            choices = c(1973, 1975, 1978, 1982, 1986, 1991, 1994, 1998, seq(2001, 2019, by = 2)))),
+                                            choices = c(1973, 1975, 1978, 1982, 1986, 1991, 1994, 1998, seq(2001, 2019, by = 2)),
+                                            selected = 2019)),
                             (radioButtons("Gender_cl",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
@@ -249,7 +250,8 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                                           selected = "FALSE")),
                             (selectizeInput("Year_jc", ## fix the input choices here
                                             label = "Select the Year",
-                                            choices = c(2006, 2008, seq(2011, 2019, by = 2)))),
+                                            choices = c(2006, 2008, seq(2011, 2019, by = 2)),
+                                            selected = 2019)),
                             (radioButtons("Gender_jc",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
@@ -302,7 +304,8 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                                           selected = "FALSE")),
                             (selectizeInput("Year_yo", ## fix the input choices here
                                             label = "Select the Year",
-                                            choices = c(2010, 2014, 2018))),
+                                            choices = c(2010, 2014, 2018),
+                                            selected = 2018)),
                             (radioButtons("Gender_yo",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
@@ -465,10 +468,21 @@ server <- function(input, output, session) {
       geom_point() +
       geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
       labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years") +
-      theme_calc()
+      theme(text = element_text(family = "sans"))
   })
   output$timeplot_worldcup <- renderPlotly({
     ggplotly(time_plot_worldcup_plotly())
+  })
+  average_wc_df <- reactive({
+    detailed_results %>% filter(series == "World Cup") %>%
+      filter(gender == input$Gender_wc) %>%
+      filter(relay == input$Relay_wc) %>%
+      filter(distance == input$Distance_wc) %>%
+      filter(style == input$Style_wc) %>%
+      summarise(averagetime = mean(time, na.rm = TRUE))
+  })
+  output$average_wc <- renderTable({
+    average_wc_df()
   })
   time_plot_olympics <- reactive({
     detailed_results %>% filter(series == "Olympic Games") %>%
@@ -486,7 +500,8 @@ server <- function(input, output, session) {
     ggplot(data = time_plot_olympics(), aes(x = year, y = averagetime)) +
       geom_point() +
       geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
-      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
+      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years") +
+      theme(text = element_text(family = "sans"))
     
   })
   output$timeplot_olympics <- renderPlotly({
@@ -508,7 +523,10 @@ server <- function(input, output, session) {
     ggplot(data = time_plot_champion1(), aes(x = year, y = averagetime)) +
       geom_point() +
       geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
-      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
+      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years") +
+      theme(plot.title = element_text(family = "sans"),
+            axis.title.x = element_text(family = "mono"),
+            axis.title.y = element_text(family = "mono"))
   })
   output$timeplot_champion1 <- renderPlotly({
     ggplotly(time_plot_champion1_plotly())
@@ -874,30 +892,6 @@ server <- function(input, output, session) {
   })
   output$top8_plot_yo <- renderPlotly({
     ggplotly(top8plotyo())
-  })
-  year_medals_df_o <- reactive({
-    detailed_results %>% filter(series == "Olympic Games") %>%
-      filter(phase_label == "Final") %>%
-      filter(rank == 1 | rank == 2 | rank == 3) %>%
-      filter(ioc_code == input$country_o) %>%
-      group_by(year, rank) %>%
-      summarise(medals = n()) %>%
-      pivot_wider(names_from = rank,
-                  values_from = medals) %>%
-      mutate(gold = as.numeric(`1`),
-             silver = as.numeric(`2`),
-             bronze = as.numeric(`3`)) %>% 
-      mutate(Gold = case_when(is.na(gold) ~ 0, !is.na(gold) ~ gold),
-             Silver = case_when(is.na(silver) ~ 0, !is.na(silver) ~ silver),
-             Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
-      mutate(totalmedals = Gold + Silver + Bronze) %>%
-      select(year, Gold, Silver, Bronze, totalmedals) %>%
-      arrange(desc(totalmedals)) %>%
-      rename("Year" = "year",
-             "Total Medals" = "totalmedals")
-  })
-  output$year_medals_o <- renderTable({
-    year_medals_df_o()
   })
 }
 
