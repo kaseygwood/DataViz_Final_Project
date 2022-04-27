@@ -58,4 +58,8 @@ In between the last two classes I finished getting the rest of the graphics into
 
 Fixed the graphics that weren't working due to misspellings for inputs and outputs. I then worked on adding a theme and organizing the app so it looks nicer. I'm doing this to make sure it can get done before I add more visualizations. I have also begun checking out headers, so the user understands what the app is doing. I took out the title for the top 8 graph, so I need to decide whether to put the title as a header in the graph or the app (I think app will look better). Mostly just tidying up the app to make it look nicer, just testing out different themes and versions of things that will go best with my app.
 
+## April 27 Beginning of Class
+
+In between the last two classes I worked on adding more labels into my app. I also then worked on making themes for the different ggplots, but I am struggling to get these to work how I want and it is also difficult to make the theme match my shiny theme. I then began starting a new visualization that is very similar to one I already have, but it is more difficult to get into the app due to the way the choices are made. For some reason the code isn't working correctly because of the NA values, but it works for some of the countries. Basically the code works if a country won each type of medal every year, but if they didn't then it is missing variables and it doesn't work as well. So, I am trying to work through that, but if I can't, then I will most likely omit the chart from my app.
+
 

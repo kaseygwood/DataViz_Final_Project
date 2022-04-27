@@ -39,6 +39,7 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                           mainPanel(h3("Top Three Finishers"),
                                     tableOutput("place_table_worldcup"),
                                     h3("Top Eight Finishers"),
+                                    h5("time difference from first place finisher"),
                                     plotlyOutput("top8_plot_wc")))),
                tabPanel("Change in time over the years", fluid = TRUE,
                         sidebarLayout(
@@ -89,7 +90,10 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                             (radioButtons("Gender_o",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
-                          mainPanel(tableOutput("place_table_olympics"),
+                          mainPanel(h3("Top Three Finishers"),
+                                    tableOutput("place_table_olympics"),
+                                    h3("Top Eight Finishers"),
+                                    h5("time difference from first place finisher"),
                                     plotlyOutput("top8_plot_o")))),
                tabPanel("Change in time over the years", fluid = TRUE,
                         sidebarLayout(
@@ -113,7 +117,11 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                         (selectizeInput("Year_o_medal", ## fix the input choices here
                                         label = "Select the Year",
                                         choices = c(seq(1924, 2016, by = 4)))),
-                        tableOutput("country_medals_o")))
+                        tableOutput("country_medals_o"),
+                        selectizeInput("country_o",
+                                       label = "Select the Country",
+                                       choices = detailed_results$ioc_code),
+                        tableOutput("year_medals_o")))
              )
            )),
   tabPanel("Championships (25m)", fluid = TRUE,
@@ -139,7 +147,10 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                             (radioButtons("Gender_c",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
-                          mainPanel(tableOutput("place_table_champion1"),
+                          mainPanel(h3("Top Three Finishers"),
+                                    tableOutput("place_table_champion1"),
+                                    h3("Top Eight Finishers"),
+                                    h5("time difference from first place finisher"),
                                     plotlyOutput("top8_plot_champion1")))),
                tabPanel("Change in time over the years", fluid = TRUE,
                         sidebarLayout(
@@ -189,7 +200,10 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                             (radioButtons("Gender_cl",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
-                          mainPanel(tableOutput("place_table_champion2"),
+                          mainPanel(h3("Top Three Finishers"),
+                                    tableOutput("place_table_champion2"),
+                                    h3("Top Eight Finishers"),
+                                    h5("time difference from first place finisher"),
                                     plotlyOutput("top8_plot_champion2")))),
                tabPanel("Change in time over the years", fluid = TRUE,
                         sidebarLayout(
@@ -239,7 +253,10 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                             (radioButtons("Gender_jc",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
-                          mainPanel(tableOutput("place_table_jc"),
+                          mainPanel(h3("Top Three Finishers"),
+                                    tableOutput("place_table_jc"),
+                                    h3("Top Eight Finishers"),
+                                    h5("time difference from first place finisher"),
                                     plotlyOutput("top8_plot_jc")))),
                tabPanel("Change in time over the years", fluid = TRUE,
                         sidebarLayout(
@@ -289,7 +306,10 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                             (radioButtons("Gender_yo",
                                           label = "Gender",
                                           choices = c("Men", "Women")))),
-                          mainPanel(tableOutput("place_table_youtholympics"),
+                          mainPanel(h3("Top Three Finishers"),
+                                    tableOutput("place_table_youtholympics"),
+                                    h3("Top Eight Finishers"),
+                                    h5("time difference from first place finisher"),
                                     plotlyOutput("top8_plot_yo")))),
                tabPanel("Change in time over the years", fluid = TRUE,
                         sidebarLayout(
@@ -746,7 +766,6 @@ server <- function(input, output, session) {
       coord_flip() +
       labs(x = "Time Behind",
            y = "Swimmer",
-           title = "Top 8 Finishers Time Difference from First Place Finisher",
            fill = "Country")
   })
   output$top8_plot_o <- renderPlotly({
@@ -773,7 +792,6 @@ server <- function(input, output, session) {
       coord_flip() +
       labs(x = "Time Behind",
            y = "Swimmer",
-           title = "Top 8 Finishers Time Difference from First Place Finisher",
            fill = "Country")
   })
   output$top8_plot_champion1 <- renderPlotly({
@@ -800,7 +818,6 @@ server <- function(input, output, session) {
       coord_flip() +
       labs(x = "Time Behind",
            y = "Swimmer",
-           title = "Top 8 Finishers Time Difference from First Place Finisher",
            fill = "Country")
   })
   output$top8_plot_champion2 <- renderPlotly({
@@ -827,7 +844,6 @@ server <- function(input, output, session) {
       coord_flip() +
       labs(x = "Time Behind",
            y = "Swimmer",
-           title = "Top 8 Finishers Time Difference from First Place Finisher",
            fill = "Country")
   })
   output$top8_plot_jc <- renderPlotly({
@@ -854,11 +870,34 @@ server <- function(input, output, session) {
       coord_flip() +
       labs(x = "Time Behind",
            y = "Swimmer",
-           title = "Top 8 Finishers Time Difference from First Place Finisher",
            fill = "Country")
   })
   output$top8_plot_yo <- renderPlotly({
     ggplotly(top8plotyo())
+  })
+  year_medals_df_o <- reactive({
+    detailed_results %>% filter(series == "Olympic Games") %>%
+      filter(phase_label == "Final") %>%
+      filter(rank == 1 | rank == 2 | rank == 3) %>%
+      filter(ioc_code == input$country_o) %>%
+      group_by(year, rank) %>%
+      summarise(medals = n()) %>%
+      pivot_wider(names_from = rank,
+                  values_from = medals) %>%
+      mutate(gold = as.numeric(`1`),
+             silver = as.numeric(`2`),
+             bronze = as.numeric(`3`)) %>% 
+      mutate(Gold = case_when(is.na(gold) ~ 0, !is.na(gold) ~ gold),
+             Silver = case_when(is.na(silver) ~ 0, !is.na(silver) ~ silver),
+             Bronze = case_when(is.na(bronze) ~ 0, !is.na(bronze) ~ bronze)) %>%
+      mutate(totalmedals = Gold + Silver + Bronze) %>%
+      select(year, Gold, Silver, Bronze, totalmedals) %>%
+      arrange(desc(totalmedals)) %>%
+      rename("Year" = "year",
+             "Total Medals" = "totalmedals")
+  })
+  output$year_medals_o <- renderTable({
+    year_medals_df_o()
   })
 }
 
