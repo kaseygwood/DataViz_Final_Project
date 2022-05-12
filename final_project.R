@@ -9,6 +9,7 @@ library(ggthemes)
 
 detailed_results <- fina_join()
 
+
 ui <- fluidPage(theme = shinytheme("superhero"),
                 titlePanel("Professional Swimming Results"),
                 tabsetPanel(
@@ -468,7 +469,8 @@ server <- function(input, output, session) {
       geom_point() +
       geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
       labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years") +
-      theme(text = element_text(family = "sans"))
+      theme(text = element_text(size = 16,
+                                family = "sans"))
   })
   output$timeplot_worldcup <- renderPlotly({
     ggplotly(time_plot_worldcup_plotly())
@@ -501,7 +503,9 @@ server <- function(input, output, session) {
       geom_point() +
       geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
       labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years") +
-      theme(text = element_text(family = "sans"))
+      theme(text = element_text(size=16,
+                                family = "sans"),
+            )
     
   })
   output$timeplot_olympics <- renderPlotly({
@@ -524,9 +528,8 @@ server <- function(input, output, session) {
       geom_point() +
       geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
       labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years") +
-      theme(plot.title = element_text(family = "sans"),
-            axis.title.x = element_text(family = "mono"),
-            axis.title.y = element_text(family = "mono"))
+      theme(text = element_text(size=16,
+                                family  = "sans"))
   })
   output$timeplot_champion1 <- renderPlotly({
     ggplotly(time_plot_champion1_plotly())
@@ -547,7 +550,9 @@ server <- function(input, output, session) {
     ggplot(data = time_plot_champion2(), aes(x = year, y = averagetime)) +
       geom_point() +
       geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
-      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
+      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years") +
+      theme(text = element_text(size=16,
+                                family = "sans"))
   })
   output$timeplot_champion2 <- renderPlotly({
     ggplotly(time_plot_champion2_plotly())
@@ -568,7 +573,9 @@ server <- function(input, output, session) {
     ggplot(data = time_plot_junior(), aes(x = year, y = averagetime)) +
       geom_point() +
       geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
-      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
+      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years") +
+      theme(text = element_text(size=16,
+                                family = "sans"))
   })
   output$timeplot_jc <- renderPlotly({
     ggplotly(time_plot_junior_plotly())
@@ -589,7 +596,9 @@ server <- function(input, output, session) {
     ggplot(data = time_plot_youtholympics(), aes(x = year, y = averagetime)) +
       geom_point() +
       geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
-      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years")
+      labs(x = "Year", y = "Average Time", title = "How The Average Swim Time Has Changed Over The Years") +
+      theme(text = element_text(size=16,
+                                family = "sans"))
   })
   output$timeplot_youtholympics <- renderPlotly({
     ggplotly(time_plot_youtholympics_plotly())
@@ -756,9 +765,14 @@ server <- function(input, output, session) {
     ggplot(data = top8_df_wc(), aes(x = name_ordered, y = timebehind, fill = ioc_code)) +
       geom_col() +
       coord_flip() +
-      labs(x = "Time Behind",
-           y = "Swimmer",
-           fill = "Country")
+      labs(x = "Swimmer",
+           y = "Time Behind",
+           fill = "Country") +
+      theme(axis.text = element_text(size = 10,
+                                family = "sans"),
+            axis.title = element_text(size = 16,
+                                      family = "sans"),
+            text = element_text(family = "sans"))
   })
   output$top8_plot_wc <- renderPlotly({
     ggplotly(top8plotwc())
@@ -782,9 +796,14 @@ server <- function(input, output, session) {
     ggplot(data = top8_df_o(), aes(x = name_ordered, y = timebehind, fill = ioc_code)) +
       geom_col() +
       coord_flip() +
-      labs(x = "Time Behind",
-           y = "Swimmer",
-           fill = "Country")
+      labs(x = "Swimmer",
+           y = "Time Behind",
+           fill = "Country") +
+      theme(axis.text = element_text(size = 10,
+                                     family = "sans"),
+            axis.title = element_text(size = 16,
+                                      family = "sans"),
+            text = element_text(family = "sans"))
   })
   output$top8_plot_o <- renderPlotly({
     ggplotly(top8ploto())
@@ -808,9 +827,14 @@ server <- function(input, output, session) {
     ggplot(data = top8_df_champion1(), aes(x = name_ordered, y = timebehind, fill = ioc_code)) +
       geom_col() +
       coord_flip() +
-      labs(x = "Time Behind",
-           y = "Swimmer",
-           fill = "Country")
+      labs(x = "Swimmer",
+           y = "Time Behind",
+           fill = "Country") +
+      theme(axis.text = element_text(size = 10,
+                                     family = "sans"),
+            axis.title = element_text(size = 16,
+                                      family = "sans"),
+            text = element_text(family = "sans"))
   })
   output$top8_plot_champion1 <- renderPlotly({
     ggplotly(top8plotc())
@@ -834,9 +858,14 @@ server <- function(input, output, session) {
     ggplot(data = top8_df_champion2(), aes(x = name_ordered, y = timebehind, fill = ioc_code)) +
       geom_col() +
       coord_flip() +
-      labs(x = "Time Behind",
-           y = "Swimmer",
-           fill = "Country")
+      labs(x = "Swimmer",
+           y = "Time Behind",
+           fill = "Country") +
+      theme(axis.text = element_text(size = 10,
+                                     family = "sans"),
+            axis.title = element_text(size = 16,
+                                      family = "sans"),
+            text = element_text(family = "sans"))
   })
   output$top8_plot_champion2 <- renderPlotly({
     ggplotly(top8plotc2())
@@ -860,9 +889,14 @@ server <- function(input, output, session) {
     ggplot(data = top8_df_jc(), aes(x = name_ordered, y = timebehind, fill = ioc_code)) +
       geom_col() +
       coord_flip() +
-      labs(x = "Time Behind",
-           y = "Swimmer",
-           fill = "Country")
+      labs(x = "Swimmer",
+           y = "Time Behind",
+           fill = "Country") +
+      theme(axis.text = element_text(size = 10,
+                                     family = "sans"),
+            axis.title = element_text(size = 16,
+                                      family = "sans"),
+            text = element_text(family = "sans"))
   })
   output$top8_plot_jc <- renderPlotly({
     ggplotly(top8plotjc())
@@ -886,9 +920,14 @@ server <- function(input, output, session) {
     ggplot(data = top8_df_yo(), aes(x = name_ordered, y = timebehind, fill = ioc_code)) +
       geom_col() +
       coord_flip() +
-      labs(x = "Time Behind",
-           y = "Swimmer",
-           fill = "Country")
+      labs(x = "Swimmer",
+           y = "Time Behind",
+           fill = "Country") +
+      theme(axis.text = element_text(size = 10,
+                                     family = "sans"),
+            axis.title = element_text(size = 16,
+                                      family = "sans"),
+            text = element_text(family = "sans"))
   })
   output$top8_plot_yo <- renderPlotly({
     ggplotly(top8plotyo())
