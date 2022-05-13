@@ -6,7 +6,7 @@ library(shinythemes)
 library(ggthemes)
 
 
-
+load("~/Downloads/DataViz_Final_Project-main/fina (1).rda")
 detailed_results <- fina_join()
 
 
